@@ -4,6 +4,7 @@
 
 # --- Elaborado: Junio 2, 2022
 # --- Impartido: Junio 24, 2022
+# --- Modificado: Julio 25, 2023
 
 # --- En este script presentamos un ejemplo para imputar estadísticamente (rellenar)
 # --- las primeras 3 fechas del DATASET con base en la curva de climatología.
