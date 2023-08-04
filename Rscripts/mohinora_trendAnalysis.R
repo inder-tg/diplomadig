@@ -27,7 +27,7 @@ library(doParallel)
 library(Kendall)
 library(trend)
 
-source( paste0( getwd(), "/Rscripts/auxFunctions.R" ) )
+source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 # ---
 
 listFILES_mohinora <- list.files(path=paste0(getwd(), "/data/mohinora"), 
