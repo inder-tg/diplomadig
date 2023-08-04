@@ -21,12 +21,8 @@ library(geoTS)
 library(foreach)
 library(doParallel)
 
-source( paste0( getwd(), "/Rscripts/auxFunctions.R" ) )
+source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 
-# library(fpp)  
-# library(forecast)
-# library(Kendall)
-# library(trend)
 # --- 
 
 # --- Carga de datos
@@ -177,6 +173,8 @@ df_layer3[,1:2] <- mohinora_NDVI_rTp[,1:2]
 
 numCores <- detectCores()
 
+# --- Asegurarse de crear folder /RData/progressReports
+
 # progress report file (to check out on the process)
 progressReportFile <- paste0(getwd(), "/RData/progressReports/mohinora_clima_Imputation.txt" )
 file.create(path=progressReportFile, showWarnings=FALSE)
@@ -216,6 +214,8 @@ df_layer1[,3] <- output[,1]
 df_layer2[,3] <- output[,2]
 df_layer3[,3] <- output[,3]
 
+
+# --- Asegurarse de crear folder /RData/mohinora_imputation
 save(df_layer1, file=paste0(getwd(),"/RData/mohinora_imputation/MOD13Q1.A2000001.RData"))
 save(df_layer2, file=paste0(getwd(),"/RData/mohinora_imputation/MOD13Q1.A2000017.RData"))
 save(df_layer3, file=paste0(getwd(),"/RData/mohinora_imputation/MOD13Q1.A2000033.RData"))
