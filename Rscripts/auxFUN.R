@@ -381,6 +381,30 @@ getMapview <- function(mapRaster, colPal, nameLayer,
   m
 }
 
+plot_central_pnorm <- function(q){
+  x <- seq(-5, 5, by = 0.1)
+  y <- dnorm(x = x, mean = 0, sd = 1)
+  
+  xz <- x
+  xz[x <= q] <- NA
+  xz[x > -q] <- NA
+  
+  yz <- y
+  yz[x <= q] <- NA
+  yz[x > -q] <- NA
+  
+  yRan <- range(y, yz, na.rm = T)
+  
+  plot(x, y, type = "l", col = "red", lwd = 3, 
+       ylab = "f(z)", xlab = "", ylim = yRan,
+       xlim = xRan, cex.main = 0.8)
+  par(new = TRUE)
+  plot(x, yz, type = "h",  ylim = yRan, #xaxt = "n", yaxt = "n", 
+       xlab = "z", ylab = "", 
+       main = paste0("Cuantil: ", abs(round(q,2)), ". Área bajo curva: ", 1-2*pnorm(q)))
+  abline(v=q, col="blue", lty=2)
+  abline(v=-q, col="blue", lty=2)
+}
 
 
 
