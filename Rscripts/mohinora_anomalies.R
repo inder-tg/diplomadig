@@ -23,6 +23,7 @@ library(RColorBrewer)
 library(gtools)
 library(foreach)
 library(doParallel)
+library(geoTS)
 
 source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 
@@ -67,10 +68,13 @@ mohinora_NDVI_rTp_full[,6:232] <- mohinora_NDVI_rTp[,3:229]
 
 XY <- list(x=-10698785, y=2893289)
 
-xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
-                                df=mohinora_NDVI_rTp_full)
+# xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
+#                                 df=mohinora_NDVI_rTp_full)
+# 
+# pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)]
 
-pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)]
+pixel_full <- get_timeSeries_byClicking(c(XY$x, XY$y),
+                                        df=mohinora_NDVI_rTp_full)
 
 pixel_mat <- get_pixel_matrix(pixel_full * 1e-4)
 

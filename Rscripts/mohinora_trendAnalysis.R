@@ -68,26 +68,31 @@ shp_anp_sinu <- spTransform(shp_anp, crs(stack_primeras3Imagenes))
 
 XY <- list(x=-10698785, y=2893289)
 
-xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
-                                df=mohinora_NDVI_rTp_full)
+# xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
+#                                 df=mohinora_NDVI_rTp_full)
 
-pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)]
+# pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)]
 
-pixel_full_ts <- ts(pixel_full * 1e-4, start = c(2000,1), end = c(2009,23),
+pixel_full <- get_timeSeries_byClicking(c(XY$x, XY$y),
+                                        df=mohinora_NDVI_rTp_full)
+
+pixel_full_ts <- ts(as.numeric(pixel_full$ts) * 1e-4, 
+                    start = c(2000,1), 
+                    end = c(2009,23),
                     frequency = 23)
 
 plot(pixel_full_ts)
 
-pixel_MannKendall <- mk.test(pixel_full * 1e-4)
+pixel_MannKendall <- mk.test(as.numeric(pixel_full$ts) * 1e-4)
 
 pixel_MannKendall$p.value
 
-pixel_SenTheil <- sens.slope(pixel_full * 1e-4)
+pixel_SenTheil <- sens.slope(as.numeric(pixel_full$ts) * 1e-4)
 
 pixel_SenTheil$estimates
 
 b_hat <- as.numeric(pixel_SenTheil$estimates)
-a_hat <- median( pixel_full * 1e-4 - b_hat * 1:length(pixel_full) )
+a_hat <- median( as.numeric(pixel_full$ts) * 1e-4 - b_hat * 1:length(pixel_full) )
 
 lineaTheilSen <- ts(a_hat + b_hat * 1:length(pixel_full), start = c(2000, 1),
                     end = c(2009, 23), frequency = 23)
@@ -158,6 +163,8 @@ write( "===TREND analysis ended here===", file=progressReportFile, append=TRUE)
 # --- Guardando los estadísticos como objetos matrix
 df_pvalue[,3] <- output[,1]
 df_slope[,3] <- output[,2]
+
+# --- Asegurarse de crear /mohinora_trendAnalysis
 
 save(df_pvalue, file=paste0(getwd(),"/RData/mohinora_trendAnalysis/pvalue.RData"))
 save(df_slope, file=paste0(getwd(),"/RData/mohinora_trendAnalysis/slope.RData"))

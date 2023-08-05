@@ -105,12 +105,16 @@ XY <- list(x=-10698785, y=2893289)
 xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
                                 df=mohinora_NDVI_rTp)
 
-pixel <- mohinora_NDVI_rTp[xy$coord, 3:ncol(mohinora_NDVI_rTp)]
+# pixel <- mohinora_NDVI_rTp[xy$coord, 3:ncol(mohinora_NDVI_rTp)]
 
-pixel_ts <- ts(pixel, start = c(2000,1), end = c(2009,23),
-               frequency = 23)
+pixel <- get_timeSeries_byClicking(c(XY$x, XY$y),
+                                   df=mohinora_NDVI_rTp)
 
-plot(pixel, main="pixel original")
+
+pixel_ts <- ts(as.numeric(pixel$ts), start = c(2000,1), 
+               end = c(2009,23), frequency = 23)
+
+plot(as.numeric(pixel$ts), main="pixel original")
 
 plot(pixel_ts, xlab="Años", ylab="NDVI", col="darkgreen", 
      main="pixel como objeto 'ts'")
