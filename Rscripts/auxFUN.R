@@ -406,5 +406,46 @@ plot_central_pnorm <- function(q){
   abline(v=-q, col="blue", lty=2)
 }
 
+# --- 
+
+spRast_valueCoords <- function(spRaster, na_rm=FALSE){
+  
+  spPoints <- as.points(spRaster, na.rm=na_rm)
+  
+  spValues <- extract(spRaster, spPoints)
+  
+  DIM <- dim(spValues)
+  
+  spRasterToPoints <- as.matrix(spValues[1:DIM[1],2:DIM[2]])
+  
+  spCoords <- crds(spRaster, na.rm=na_rm)
+  
+  list(values=spRasterToPoints, coords=spCoords)  
+}
+
+gapfill_climatology <- function(y, box=c("lower", "median", "upper"),
+                                gapType=c(NA, NaN), lenPeriod=23){
+  
+  if(is.na(gapType)){
+    toFill_ind <- (1:length(y))[is.na(y)]
+  }
+  
+  if(is.nan(gapType)){
+    toFill_ind <- (1:length(y))[is.nan(y)]
+  }
+  
+  output <- y
+  
+  clima <- climatology(x=y, lenPeriod=lenPeriod)
+  
+  box <- match.arg(box)
+  
+  quant <- ifelse(box=="lower", 2, ifelse(box=="median", 3, 4))
+  
+  output[toFill_ind] <- clima$boxplot$stats[quant,toFill_ind%%lenPeriod]
+  
+  list(filled=output, original=y)
+}
+
 
 
