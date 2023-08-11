@@ -449,3 +449,34 @@ gapfill_climatology <- function(y, box=c("lower", "median", "upper"),
 
 
 
+trendAnalysis <- function(x, startYear, endYear, frequency){
+  
+  pixel_MK <- mk.test(x)
+  
+  # pixel_MK$p.value
+  
+  pixel_SenTheil <- sens.slope(x)
+  
+  # pixel_SenTheil$estimates
+  
+  b_hat <- as.numeric(pixel_SenTheil$estimates)
+  a_hat <- median( x - b_hat * 1:length(x) )
+  
+  lineaTheilSen <- ts(a_hat + b_hat * 1:length(x), 
+                      start = c(startYear, 1),
+                      end = c(endYear, 12), frequency = frequency)
+  
+  x_ts <- ts(x, start=c(startYear,1), end=c(endYear,frequency), 
+             frequency = frequency)
+  
+  
+  par(mfrow=c(1,1), mar = c(2,2,1,2), adj=0)
+  plot(x_ts , type="l", col = "gray", ylab = "NDVI")
+  lines(lineaTheilSen, lwd = 5, col = "lightcoral")
+  legend("topright", legend = c("raw data", "linear trend"),
+         col = c("gray", "lightcoral"), lty = rep(1,2), lwd = c(1,5), bty = "n")
+  
+
+}
+
+
