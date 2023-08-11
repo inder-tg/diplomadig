@@ -470,7 +470,7 @@ trendAnalysis <- function(x, startYear, endYear, frequency, productName){
              frequency = frequency)
   
   
-  par(mfrow=c(1,1), mar = c(2,2,1,2), adj=0)
+  # par(mfrow=c(1,1), mar = c(2,2,1,2), adj=0)
   plot(x_ts , type="l", col = "gray", ylab = productName)
   lines(lineaTheilSen, lwd = 5, col = "lightcoral")
   legend("topright", legend = c("raw data", "linear trend"),
