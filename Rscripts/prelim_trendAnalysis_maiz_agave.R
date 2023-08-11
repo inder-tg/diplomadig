@@ -154,14 +154,14 @@ legend("topright", legend = c("raw data", "linear trend"),
 # --- cambio abrupto
 
 agro_bp <- bfast(agro_pixel_filled_ts,
-                  season = "harmonic")
+                 season = "harmonic")
 
 plot(agro_bp)
 
 # --- AGAVE
 
 xyT_UTM_vect <- vect(xyT_UTM, 
-                    crs="+proj=utm +zone=13 +datum=WGS84")
+                     crs="+proj=utm +zone=13 +datum=WGS84")
 
 agave_pixel <- terra::extract(x=sentinel_LP, y=xyT_UTM_vect)
 
@@ -174,7 +174,7 @@ par(mfrow=c(1,1), mar = c(5,4,4,2))
 plot(agave_pixel_ts)
 
 agave_pixel_clima <- climatology(x=as.numeric(agave_pixel),
-                                lenPeriod = 12)
+                                 lenPeriod = 12)
 
 boxplot(agave_pixel_clima$matrix)
 
@@ -220,7 +220,7 @@ legend("topright", legend = c("raw data", "linear trend"),
 # --- cambio abrupto
 
 agave_bp <- bfast(agave_pixel_ts,
-               season = "harmonic")
+                  season = "harmonic")
 
 plot(agave_bp)
 
@@ -232,8 +232,8 @@ plot(agave_bp01)
 
 # --- pixel_tsAnalysis
 
-x <- -102.0366292 # -102.0215001
-y <- 20.363994 # 20.3654926
+x <- -102.0215001 #-102.0366292 #
+y <- 20.3654926 # 20.363994 #
 
 XY <- SpatialPoints(cbind(x, y))
 proj4string(XY) <- CRS('+init=epsg:4326')
@@ -244,8 +244,8 @@ XY_UTM_vect <- vect(XY_UTM,
 
 pixel <- terra::extract(x=sentinel_LP, y=XY_UTM_vect)
 
-# XY_list <- list(x=810948.1, y=2254742)
-XY_list <- list(x=extent(XY_UTM)[1], y=extent(XY_UTM)[3])
+XY_list <- list(x=810948.1, y=2254742)
+# XY_list <- list(x=extent(XY_UTM)[1], y=extent(XY_UTM)[3])
 
 pixel_homemade <- get_timeSeries_byClicking(toPlot = XY_list, 
                                             df = LPsentinel_rTp)
@@ -257,6 +257,8 @@ pixel_ts <- ts(as.numeric(pixel_homemade$ts),
                start = c(2019, 1),
                end = c(2022, 12),
                frequency = 12)
+
+pixel_bp01 <- bfast01(pixel_ts)
 
 pixel_bp01 <- bfast01(pixel_ts, order = 1)
 

@@ -95,7 +95,6 @@ output <- foreach(i=1:nrow(sentinel_LP_shp_rTp$values),
                     
                     pixel <- as.numeric(sentinel_LP_shp_rTp$values[i, ]) * 1e-4
                     
-                    # pixel_interpol <- na_interpolation(pixel * 1e-4)
                     pixel_filled <- gapfill_climatology(y=pixel, 
                                                         box="median", gapType = NaN, 
                                                         lenPeriod = 12)
@@ -135,8 +134,8 @@ save(mat_slope, file=paste0(getwd(),"/RData/LaPiedad_trendAnalysis/slope.RData")
 
 PROJECTION <- raster::projection(raster(tifFILES[1]))
 
-# map_pvalue <- LoadToEnvironment(paste0(getwd(),"/RData/LaPiedad_trendAnalysis/pvalue.RData"))$df_pvalue
-# map_slope <- LoadToEnvironment(paste0(getwd(),"/RData/LaPiedad_trendAnalysis/slope.RData"))$df_slope
+# mat_pvalue <- LoadToEnvironment(paste0(getwd(),"/RData/LaPiedad_trendAnalysis/pvalue.RData"))$df_pvalue
+# mat_slope <- LoadToEnvironment(paste0(getwd(),"/RData/LaPiedad_trendAnalysis/slope.RData"))$df_slope
 
 map_pvalue <- matrixToRaster(matrix=mat_pvalue, projection=PROJECTION)
 map_slope <- matrixToRaster(matrix=mat_slope, projection=PROJECTION)
@@ -159,10 +158,6 @@ mp_shp <- mapview(shp_raster[855,])
 
 mp <- mapview(slopeMap)
 
-
 mp + mp_shp
 
-
-
-
-
+mp + mp_maiz + mp_agave
