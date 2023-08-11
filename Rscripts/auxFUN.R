@@ -449,7 +449,7 @@ gapfill_climatology <- function(y, box=c("lower", "median", "upper"),
 
 
 
-trendAnalysis <- function(x, startYear, endYear, frequency){
+trendAnalysis <- function(x, startYear, endYear, frequency, productName){
   
   pixel_MK <- mk.test(x)
   
@@ -471,7 +471,7 @@ trendAnalysis <- function(x, startYear, endYear, frequency){
   
   
   par(mfrow=c(1,1), mar = c(2,2,1,2), adj=0)
-  plot(x_ts , type="l", col = "gray", ylab = "NDVI")
+  plot(x_ts , type="l", col = "gray", ylab = productName)
   lines(lineaTheilSen, lwd = 5, col = "lightcoral")
   legend("topright", legend = c("raw data", "linear trend"),
          col = c("gray", "lightcoral"), lty = rep(1,2), lwd = c(1,5), bty = "n")
