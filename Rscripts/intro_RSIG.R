@@ -1,10 +1,13 @@
 
 # --- Diplomado Geomática, IG, UNAM, 2023
 # --- Módulo X Análisis de series de tiempo de imágenes satelitales con R
+# --- Diplomado Geomática, IG, UNAM, 2024
+# --- Módulo IX Percepción Remota: Análisis de series de tiempo de imágenes satelitales con R
+
 
 # --- Elaborado: Junio 2, 2022
 # --- Impartido: Junio 24, 2022
-# --- Modificado: Julio 25, 2023
+# --- Modificado: Julio 25, 2023; Agosto 9, 2024
 
 # --- En este script presentamos ejemplos para usar los paquetes raster,
 # --- mapview, RColorBrewer y discutimos algunas ideas para realizar análisis 
@@ -19,7 +22,8 @@
 # --- Instalación de todos los paquetes a utilizar en este módulo
 source( paste0( getwd(), "/Rscripts/auxPKG.R" ) )
 
-library(raster)
+# library(raster)
+library(terra)
 library(mapview)
 library(RColorBrewer)
 library(gtools)
@@ -32,7 +36,8 @@ listFILES_rspatial <- mixedsort(list.files( path=dirDATA_rspatial,
 
 # ------------------------------------------------------------------------------
 # Escena Landsat 8 tomada 14 Junio, 2017; cubre el área entre Concord y Stockton
-LANDSAT <- stack(listFILES_rspatial)
+# LANDSAT <- stack(listFILES_rspatial)
+LANDSAT <- rast(listFILES_rspatial)
 # ------------------------------------------------------------------------------
 
 # --- Visualización
@@ -44,8 +49,11 @@ plot(subset(LANDSAT, 3), main = "Landsat Green")
 plot(subset(LANDSAT, 4), main = "Landsat Red")
 plot(subset(LANDSAT, 5), main = "Landsat NIR")
 
-LANDSAT_RGB <- stack(listFILES_rspatial[c(4,3,2)])
-LANDSAT_FCC <- stack(listFILES_rspatial[c(5,4,3)])
+# LANDSAT_RGB <- stack(listFILES_rspatial[c(4,3,2)])
+# LANDSAT_FCC <- stack(listFILES_rspatial[c(5,4,3)])
+LANDSAT_RGB <- rast(listFILES_rspatial[c(4,3,2)])
+LANDSAT_FCC <- rast(listFILES_rspatial[c(5,4,3)])
+
 
 # Compuesto de color verdadero 
 par(mfrow = c(1,1))
@@ -91,9 +99,11 @@ names(landsat)
 # Spatial subset or "crop" #
 # --------------------------
 
-extent(landsat)
+# extent(landsat)
+ext(landsat)
 
-newExtent <- extent(624387, 635752, 4200047, 4210939)
+# newExtent <- extent(624387, 635752, 4200047, 4210939)
+newExtent <- ext(624387, 635752, 4200047, 4210939)
 
 landsatCrop <- crop(landsat, newExtent)
 
@@ -117,8 +127,6 @@ plotRGB(landsatCrop, 3,2,1, stretch = "lin", add = T)
 # cargar polígonos con info de uso y cobertura del suelo
 poligono <- readRDS(paste0(dirDATA_rspatial, "/samples.rds"))
 
-poligono
-
 # tomemos una muestra aleatoria de 300 
 puntos_muestra <- spsample(poligono, 300, type = "random")
 
@@ -126,7 +134,8 @@ puntos_muestra <- spsample(poligono, 300, type = "random")
 puntos_muestra$class <- over(puntos_muestra, poligono)$class
 
 # extract values with points
-mat_landsat_puntos <- extract(landsat, puntos_muestra)
+# mat_landsat_puntos <- extract(landsat, puntos_muestra)
+mat_landsat_puntos <- extract(landsat, puntos_muestra@coords)
 
 # imprime en consola primeros 6 renglones
 head(mat_landsat_puntos)
@@ -229,30 +238,27 @@ ndviVeg[ndviVeg < 0.4] <- NA
 
 plot(ndviVeg, main = "Verdor saludable")
 
-par(mar = c(4.5, 5, 1.5, 2))
-plot(ndviVeg, main = "Verdor saludable")
-
 # --- ndviVeg es equivalente a vegNDVI ---
-vegNDVI <- calc(ndvi_fun, function(x){x[x < 0.4]<-NA; x})
-plot(vegNDVI, main = "Verdor saludable")
+# vegNDVI <- calc(ndvi_fun, function(x){x[x < 0.4]<-NA; x})
+vegNDVI <- app(ndvi_fun, function(x){x[x < 0.4]<-NA; x})
+plot(vegNDVI, main = "Verdor saludable con app")
 
 # ?reclassify
-vegReclassify <- reclassify( ndvi_fun, cbind(-Inf, 0.4, NA) )
+# vegReclassify <- reclassify( ndvi_fun, cbind(-Inf, 0.4, NA) )
+vegReclassify <- classify( ndvi_fun, cbind(-Inf, 0.4, NA) )
 
-compareRaster(vegNDVI, vegReclassify)
+# compareRaster(vegNDVI, vegReclassify)
+compareGeom(vegNDVI, vegReclassify)
 
 # ---
 # El histograma de ndvi_fun tiene un "pico" alrededor del intervalo (0.25, 0.3)
 # abajo mostramos 2 formas de resaltar las áreas con valores en  
 
-# peakVeg <- ndvi
-# peakVeg[peakVeg > -Inf & peakVeg < 0.25] <- NA
-# peakVeg[peakVeg > 0.3 & peakVeg < Inf] <- NA
-# peakVeg[peakVeg >= 0.25 & peakVeg <= 0.3] <- 1
-# 
-# plot(peakVeg)
 
-land <- reclassify(ndvi_fun, c(-Inf, 0.25, NA, 0.25, 0.3, 1, 0.3, Inf, NA))
+# land <- reclassify(ndvi_fun, c(-Inf, 0.25, NA, 0.25, 0.3, 1, 0.3, Inf, NA))
+(matClass <- matrix(c(-Inf, 0.25, NA, 0.25, 0.3, 1, 0.3, Inf, NA), ncol=3, byrow = TRUE))
+
+land <- classify(ndvi_fun,  matClass)
 plot(land, main = "Qué es esto?")
 
 # compareRaster(land, peakVeg)
@@ -263,7 +269,11 @@ plotRGB(LANDSAT_RGB, r = 1, g = 2, b = 3, axes = TRUE, stretch = "lin",
 plot(land, add = TRUE, legend = FALSE)
 
 # Diferentes clases para NDVI
-vegc <- reclassify(ndvi_fun, c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5, 
-                           4, 0.5, Inf, 5))
+# vegc <- reclassify(ndvi_fun, c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5, 
+#                            4, 0.5, Inf, 5))
+
+matClass <- matrix(c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5, 
+                     4, 0.5, Inf, 5), byrow = TRUE, ncol=3)
+vegc <- classify(ndvi_fun, matClass)
 plot(vegc, col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
 # -----------------------------------------------------------------------------

@@ -21,4 +21,10 @@ Módulo X "Análisis de series de tiempo de imágenes satelitales con R"
 
 Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satelitales con R"
 
+## Primera Sesión (Agosto 10): 
+
+- Directorio /rspatial usado en ```intro_RSIG.R```
+
+- 
+
 </details>
