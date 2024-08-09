@@ -16,7 +16,7 @@ Módulo X "Análisis de series de tiempo de imágenes satelitales con R"
 - Directorio /muni_2018 usado en ```trendAnalysis_maiz_agave.R``` se descarga desde el folder asignado en la nube
 </details>
 
-<>details>
+<details>
 <summary>XVII Edición, 2024</summary>
 
 Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satelitales con R"
