@@ -23,8 +23,12 @@ Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satel
 
 ## Primera Sesión (Agosto 10): 
 
-- Directorio /rspatial usado en ```intro_RSIG.R```
+- Directorio /data/rspatial usado en ```intro_RSIG.R```
 
-- 
+- Directorio /data/ANP distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
+
+- Directorio /data/USV7 distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
+
+- Directorio /data/mohinora usado en ```mohinora_imputation.R```
 
 </details>
