@@ -1,18 +1,33 @@
 
+# --- Diplomado Geomática, IG, UNAM, 2024
+# --- Módulo IX: Percepcion Remota: Análisis de series de tiempo de imágenes satelitales con R
+
+# --- Elaborado: Agosto 8, 2024
+# --- Impartido: Agosto 10, 2022
+
+# --- En este script presentamos un ejemplo para imputar estadísticamente (rellenar)
+# --- las primeras 3 fechas del DATASET con base en la curva de climatología.
+# --- Usamos código en paralelo para eficientar el cómputo a alta escala
+
+# --- DATASET: 
+# --- Los directorios ANP y USV7 deben descargarse de la nube del Diplomado
+
+# --- Preámbulo
+
 library(sf)
 library(tmap)
 
 # ---
 
-DIR <- "C:/Users/inder/OneDrive/Desktop/RPkgs_dev/sephora_test/data"
+DIR <- paste0(getwd(), "/data")
 
 listDIRS <- list.dirs(path=DIR)
 
-ANPs <- list.files(path = listDIRS[2],
+ANPs <- list.files(path = listDIRS[1],
                    full.names = TRUE,
                    pattern = ".shp$")
 
-USV <- list.files(path = listDIRS[6],
+USV <- list.files(path = listDIRS[4],
                   full.names = TRUE,
                   pattern = ".shp$")
 
