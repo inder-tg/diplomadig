@@ -4,16 +4,16 @@
 #
 # Modificado Julio 28, 2023
 #
-# Funciones auxiliares
+# Instalación de paquetes/bibliotecas a utilizar en este módulo
 # 
-# Hecho para SELPER/CEOS Working Group Chapter D Training Group
+# Hecho para SELPER/CEOS Working Group Chapter D Training Group  
 #
 # -----------------------------------------------------------------------------
 
 neededPackages <- c("raster", "mapview", "RColorBrewer", "gtools",
                     "foreach", "doParallel", "Kendall", "trend",
                     "geoTS", "sta", "rasterVis", "bfast", "tmap", 
-                    "ggplot2", "dplyr")
+                    "ggplot2", "dplyr", "terra")
 
 packagesToInstall <- neededPackages[!(neededPackages %in% installed.packages()[,"Package"])]
 
