@@ -277,5 +277,5 @@ plot(land, add = TRUE, legend = FALSE)
 matClass <- matrix(c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5, 
                      4, 0.5, Inf, 5), byrow = TRUE, ncol=3)
 vegc <- classify(ndvi_fun, matClass)
-plot(vegc, col = rev(terrain.colors(4)), main = 'NDVI based thresholding')
+plot(vegc, col = rev(terrain.colors(5)), main = 'NDVI based thresholding')
 # -----------------------------------------------------------------------------
