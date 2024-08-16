@@ -10,7 +10,10 @@
 # --- las primeras 3 fechas del DATASET con base en la curva de climatología.
 # --- Usamos código en paralelo para eficientar el cómputo a alta escala
 
-# --- DATASET: NDVI MOD13Q1 en Cerro Mohinora, Chihuahua
+# --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2023 
+
+# --- ADDicionalmente, este script requiere archivos
+# --- MOD13Q1_061_250m_16_days_NDVI_interpol.tif
 
 # --- NOTA: Este código no es completamente automático; de vez en vez se requerirá
 # --- crear folders o descomentar líneas de código (por ejemplo en el uso de rutinas ligada al paquete raster),
@@ -36,10 +39,6 @@ source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 listFILES_mohinora <- list.files( path = paste0( getwd(), "/data/mohinora" ), 
                               pattern = ".tif", 
                               full.names = TRUE )
-
-# SHP_anp <- list.files( path = paste0( getwd(), "/data/anp_2021" ),
-#                        pattern = ".shp",
-#                        full.names = TRUE)
 
 SHP_anp <- list.files( path = paste0( getwd(), "/data/ANP" ),
                        pattern = ".shp",
@@ -72,10 +71,9 @@ shp_anp$geometry
 # ACTION REQUIRED!!!
 # crs shp original es distinto a crs de stack_NDVI_Mohinora
 # spTranform ayuda a realizar la reproyección
-# shp_anp_sinu <- spTransform(shp_anp, raster::crs(stack_NDVI_Mohinora))
-
-plot( subset(stack_NDVI_Mohinora, 100) )
-plot( shp_anp_sinu[144,], add=TRUE, lwd=4)
+# shp_anp_sinu <- spTransform(shp_anp[144,], raster::crs(stack_NDVI_Mohinora))
+# plot( subset(stack_NDVI_Mohinora, 100) )
+# plot( shp_anp_sinu, add=TRUE, lwd=4)
 
 # mohinora_poligono_sinu <- st_transform(x=shp_anp[144,], crs=crs(stack_NDVI_Mohinora)) # ACTION REQUIRED!!!
 shp_anp_sinu <- st_transform(shp_anp[144,], st_crs(stack_NDVI_Mohinora))
@@ -94,7 +92,7 @@ write_sf(shp_anp_sinu, paste0( getwd(), "/data/shp_mohinora/mohinora.shp" ))
 mohinora_NDVI_rTp <- spRast_valueCoords(stack_NDVI_Mohinora)
 
 plot( subset(stack_NDVI_Mohinora, 100) )
-# plot( shp_anp_sinu[144,], add=TRUE, lwd=4) # ACTION REQUIRED!!!
+# plot( shp_anp_sinu, add=TRUE, lwd=4) # ACTION REQUIRED!!!
 lines(shp_anp_sinu, lwd=4)
 
 # -----------------------------------------------------------------------------
@@ -106,7 +104,7 @@ XY <- locator()
 # --- 3. Presiona la tecla ESC de tu teclado
 # --- 4. Continúa con el script a partir de la línea 107
 
-XY <- list(x=-10698785, y=2893289)
+# XY <- list(x=-10698785, y=2893289)
 
 # xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
 #                                 df=mohinora_NDVI_rTp) # ACTION REQUIRED!!!

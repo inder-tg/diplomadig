@@ -14,7 +14,14 @@
 # --- La teoría detrás de las pruebas Mann-Kendall y Theil-Sen se puede
 # --- encontrar en el archivo trendAnalysis.pdf en el folder PDF
 
-# --- DATASET: NDVI MOD13Q1 en Cerro Mohinora, Chihuahua
+# --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2023 
+
+# --- ADDicionalmente, este script requiere archivos
+# --- MOD13Q1_061_250m_16_days_NDVI_interpol.tif
+
+# --- NOTA: Este código no es completamente automático; de vez en vez se requerirá
+# --- crear folders o descomentar líneas de código (por ejemplo en el uso de rutinas ligada al paquete raster),
+# --- esas líneas están marcada con el texto "ACTION REQUIRED!!!"
 
 # --- Preámbulo
 library(raster)
@@ -46,18 +53,6 @@ shp_mohinora <- read_sf( shpFILES_mohinora[1] )
 
 # mohinora_NDVI_rTp_full <- rasterToPoints(stack_NDVI_Mohinora) # ACTION REQUIRED!!!
 mohinora_NDVI_rTp_full <- spRast_valueCoords(stack_NDVI_Mohinora)
-
-# ---
-
-# SHP_anp <- list.files( path = paste0( getwd(), "/data/anp_2021" ),
-#                        pattern = ".shp", 
-#                        full.names = TRUE)
-# 
-# shp_anp <- shapefile( SHP_anp[1] )
-# 
-# shp_anp_sinu <- spTransform(shp_anp, crs(stack_primeras3Imagenes))
-# ---
-
 
 # -----------------------------------------
 # --- Análisis de tendencias: Exploración #
@@ -136,7 +131,7 @@ write(as.character(Sys.time()[1]), file=progressReportFile,
 kluster <- parallel::makeCluster(numCores-1, outfile="")
 registerDoParallel(kluster)
 
-output <- foreach(i=1:nrow(mohinora_NDVI_rTp_full), .combine="rbind",
+output <- foreach(i=1:nrow(mohinora_NDVI_rTp_full$coords), .combine="rbind",
                   .packages=c("trend") ) %dopar% { # nrow(sp_ndvi_rTp)
                     
                     # pixel <- mohinora_NDVI_rTp_full[i, 3:ncol(mohinora_NDVI_rTp_full)] * 1e-4 # ACTION REQUIRED !!!!
@@ -225,7 +220,7 @@ QUANT <- quantile(slopeMap, probs= seq(0,1,by=0.1) )
 
 plot(slopeMap, col=c("red", "green"),
      breaks=c(QUANT[1], 0, QUANT[11]))
-plot(shp_anp_sinu[165,], add=TRUE, lwd=4)
+plot(shp_mohinora, add=TRUE, lwd=4)
 
 
 slopeValues_parte_negativa <- slopeValues_sinNA[slopeValues_sinNA<=0]
@@ -267,7 +262,7 @@ slope_mp <- mapview(slopeMap, na.color = "transparent",
                     at = c(QUANT[1], QUANT_negativa[10], QUANT_positiva[2], 
                            QUANT[11]))
 
-shp_mohinora_mp <- mapview(shp_anp_sinu[165,], layer.name="shp", 
+shp_mohinora_mp <- mapview(shp_mohinora, layer.name="shp", 
                            legend=FALSE,
                            color="darkblue", lwd=4,
                            alpha.regions=0, homebutton=FALSE)
