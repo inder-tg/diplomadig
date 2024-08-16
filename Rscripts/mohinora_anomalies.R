@@ -3,20 +3,23 @@
 
 # --- Elaborado: Junio 2, 2022
 # --- Impartido: Junio 25, 2022
-# --- Modificado: Agosto 3, 2023
+# --- Modificado: Agosto 3, 2023, Agosto 10, 2024
 
 # --- En este script presentamos un análisis de anomalías.
 # --- Usamos código en paralelo para eficientar el cómputo a alta escala.
 
-# --- DATASET: NDVI MOD13Q1 en Cerro Mohinora, Chihuahua
+# --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2023 
+
 # --- ADDicionalmente, este script requiere archivos
-# --- MOD13Q1_NDVI_2000001.tif
-# --- MOD13Q1_NDVI_2000017.tif
-# --- MOD13Q1_NDVI_2000033.tif
-# --- creados a través del archivo mohinora_imputation.R
+# --- MOD13Q1_061_250m_16_days_NDVI_interpol.tif
+
+# --- NOTA: Este código no es completamente automático; de vez en vez se requerirá
+# --- crear folders o descomentar líneas de código (por ejemplo en el uso de rutinas ligada al paquete raster),
+# --- esas líneas están marcada con el texto "ACTION REQUIRED!!!"
 
 # --- Preámbulo
 library(raster)
+library(terra)
 library(rasterVis)
 library(mapview)
 library(RColorBrewer)
@@ -30,61 +33,51 @@ source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 # ---
 
 listFILES_mohinora <- list.files(path=paste0(getwd(), "/data/mohinora"), 
-                                 pattern=".tif", 
+                                 pattern=".tif$", 
                                  full.names=TRUE)
 
-stack_primeras3Imagenes <- stack(listFILES_mohinora[2:4])
+shpFILES_mohinora <- list.files(path=paste0(getwd(), "/data/shp_mohinora"), 
+                                pattern=".shp$", 
+                                full.names=TRUE)
 
-mohinora_NDVI_rTp <- LoadToEnvironment( paste0( getwd(), "/RData/mohinora_imputation/NDVI_MOD13Q1_00_09_lineal.RData" ) )$mohinora_NDVI_rTp
+# stack_NDVI_Mohinora <- stack( listFILES_mohinora[1] ) # ACTION REQUIRED!!!
+stack_NDVI_Mohinora <- rast( listFILES_mohinora[1] )
 
-primeras3_NDVI_rTp <- rasterToPoints(stack_primeras3Imagenes)
+# shp_mohinora <- shapefile( shpFILES_mohinora[1] ) # ACTION REQUIRED!!!
+shp_mohinora <- read_sf( shpFILES_mohinora[1] )
 
-mohinora_NDVI_rTp_full <- matrix(nrow = nrow(mohinora_NDVI_rTp), ncol=232)
-
-mohinora_NDVI_rTp_full[,1] <- primeras3_NDVI_rTp[,1]
-
-mohinora_NDVI_rTp_full[,2] <- primeras3_NDVI_rTp[,2]
-
-mohinora_NDVI_rTp_full[,3:5] <- primeras3_NDVI_rTp[,3:5]
-
-mohinora_NDVI_rTp_full[,6:232] <- mohinora_NDVI_rTp[,3:229]
+# mohinora_NDVI_rTp_full <- rasterToPoints(stack_NDVI_Mohinora) # ACTION REQUIRED!!!
+mohinora_NDVI_rTp_full <- spRast_valueCoords(stack_NDVI_Mohinora)
 
 # ---
-
-# SHP_anp <- list.files( path = paste0( getwd(), "/data/anp_2021" ),
-#                        pattern = ".shp", 
-#                        full.names = TRUE)
-# 
-# shp_anp <- shapefile( SHP_anp[1] )
-# 
-# shp_anp_sinu <- spTransform(shp_anp, crs(stack_primeras3Imagenes))
-
-# ---
-
 
 # -----------------------------------------------
 # --- Análisis de cambio abrupto: anomalías --- #
 # -----------------------------------------------
 
-XY <- list(x=-10698785, y=2893289)
+# XY <- list(x=-10698785, y=2893289)
 
 # xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
-#                                 df=mohinora_NDVI_rTp_full)
-# 
-# pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)]
+#                                 df=mohinora_NDVI_rTp_full) # ACTION REQUIRED!!!
+xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
+                                df=mohinora_NDVI_rTp_full$coords)
 
-pixel_full <- get_timeSeries_byClicking(c(XY$x, XY$y),
-                                        df=mohinora_NDVI_rTp_full)
+# pixel_full <- mohinora_NDVI_rTp_full[xy$coord, 3:ncol(mohinora_NDVI_rTp_full)] # ACTION REQUIRED!!!
+pixel_full <- mohinora_NDVI_rTp_full$values[xy$coord, ]
 
 pixel_mat <- get_pixel_matrix(pixel_full * 1e-4)
 
+# --- promedio por fecha de adquisicion
 mu <- apply(pixel_mat, 2, mean)
 
+# --- desviacion estándar por fecha de adquisicion
 sigma <- apply(pixel_mat, 2, sd)
 
+
+# --- anomalias estandarizadas
 anomalia <- (pixel_mat - mu)/sigma
 
-anomalia_ts <- ts(c(t(anomalia)), start = c(2000,1), end = c(2009,23),
+anomalia_ts <- ts(c(t(anomalia)), start = c(2000,1), end = c(2023,23),
                   frequency = 23)
 
 plot(anomalia_ts, ylab="")
@@ -126,21 +119,30 @@ abline(h=-4, col="brown")
 
 # --- CODIGO EN PARALELO
 
-df_anomalias2000 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
-df_anomalias2000[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+# # ACTION REQUIRED!!!
+# df_anomalias2000 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
+# df_anomalias2000[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+# 
+# df_anomalias2004 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
+# df_anomalias2004[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+# 
+# df_anomalias2008 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
+# df_anomalias2008[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
 
-df_anomalias2004 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
-df_anomalias2004[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+df_anomalias2000 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full$coords), ncol=25)
+df_anomalias2000[,1:2] <- mohinora_NDVI_rTp_full$coords
 
-df_anomalias2008 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=25)
-df_anomalias2008[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+df_anomalias2004 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full$coords), ncol=25)
+df_anomalias2004[,1:2] <- mohinora_NDVI_rTp_full$coords
 
-# df_slope <- matrix(nrow=nrow(mohinora_NDVI_rTp_full), ncol=3)
-# df_slope[,1:2] <- mohinora_NDVI_rTp_full[,1:2]
+df_anomalias2008 <- matrix(nrow=nrow(mohinora_NDVI_rTp_full$coords), ncol=25)
+df_anomalias2008[,1:2] <- mohinora_NDVI_rTp_full$coords
+
 
 numCores <- detectCores()
 
-# --- progress report file (to check out on the process)
+# ACTION REQUIRED!!!
+# --- Asegurarse de crear /RData/progressReports
 progressReportFile <- paste0(getwd(), "/RData/progressReports/mohinora_anomalies.txt" )
 file.create(path=progressReportFile, showWarnings=FALSE)
 
@@ -152,11 +154,11 @@ write(as.character(Sys.time()[1]), file=progressReportFile,
 kluster <- parallel::makeCluster(numCores-1, outfile="")
 registerDoParallel(kluster)
 
-# nrow(mohinora_NDVI_rTp_full)
-
-output <- foreach(i=1:nrow(mohinora_NDVI_rTp_full), .combine="rbind") %dopar% { 
+output <- foreach(i=1:nrow(mohinora_NDVI_rTp_full$coords), .combine="rbind") %dopar% { 
                     
-                    pixel <- mohinora_NDVI_rTp_full[i, 3:ncol(mohinora_NDVI_rTp_full)] * 1e-4
+                    # pixel <- mohinora_NDVI_rTp_full[i, 3:ncol(mohinora_NDVI_rTp_full)] * 1e-4 # ACTION REQUIRED!!!
+  
+                    pixel <- mohinora_NDVI_rTp_full$values[i,] * 1e-4
                     
                     pixel_mat <- get_pixel_matrix(pixel)
                     
@@ -193,7 +195,6 @@ df_anomalias2004[,3:25] <- output[,24:46]
 df_anomalias2008[,3:25] <- output[,47:69]
 
 # --- Asegurarse de haber creado el folder /RData/mohinora_anomalies
-
 save(df_anomalias2000, file=paste0(getwd(),"/RData/mohinora_anomalies/2000.RData"))
 save(df_anomalias2004, file=paste0(getwd(),"/RData/mohinora_anomalies/2004.RData"))
 save(df_anomalias2008, file=paste0(getwd(),"/RData/mohinora_anomalies/2008.RData"))
@@ -203,24 +204,24 @@ save(df_anomalias2008, file=paste0(getwd(),"/RData/mohinora_anomalies/2008.RData
 # --- RASTERIZACION --- #
 # -----------------------
 
-PROJECTION <- raster::projection(stack_primeras3Imagenes)
+PROJECTION <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=m +no_defs"
 
-df_anomalias2000 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2000.RData"))$df_anomalias2000
-df_anomalias2004 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2004.RData"))$df_anomalias2004
-df_anomalias2008 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2008.RData"))$df_anomalias2008
+# df_anomalias2000 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2000.RData"))$df_anomalias2000
+# df_anomalias2004 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2004.RData"))$df_anomalias2004
+# df_anomalias2008 <- LoadToEnvironment(paste0(getwd(),"/RData/mohinora_anomalies/2008.RData"))$df_anomalias2008
 
 map_anomalies2000 <- brick()
 map_anomalies2004 <- brick()
 map_anomalies2008 <- brick()
 
 for( i in 1:23 ){
-  temp2000 <- matrixToRaster_test(matrix=df_anomalias2000[,c(1,2,i+2)],
+  temp2000 <- matrixToRaster(matrix=df_anomalias2000[,c(1,2,i+2)],
                                   projection=PROJECTION)
   
-  temp2004 <- matrixToRaster_test(matrix=df_anomalias2004[,c(1,2,i+2)], 
+  temp2004 <- matrixToRaster(matrix=df_anomalias2004[,c(1,2,i+2)], 
                                   projection=PROJECTION)
   
-  temp2008 <- matrixToRaster_test(matrix=df_anomalias2008[,c(1,2,i+2)], 
+  temp2008 <- matrixToRaster(matrix=df_anomalias2008[,c(1,2,i+2)], 
                                   projection=PROJECTION)
   
   map_anomalies2000 <- addLayer(map_anomalies2000, temp2000)
@@ -239,17 +240,19 @@ names(map_anomalies2004) <- LABELS
 
 names(map_anomalies2008) <- LABELS
 
-writeRaster(map_anomalies2000,
-            filename = paste0( getwd(), "/data/mohinora_anomalies/2000" ),
-            format="GTiff", datatype="FLT4S", overwrite=TRUE)
+# #ACTION REQUIRED!!!
+# Asegurarse de crear /TIF/mohinora_anomalies
+raster::writeRaster(map_anomalies2000,
+                    filename = paste0( getwd(), "/TIF/mohinora_anomalies/2000" ),
+                    format="GTiff", datatype="FLT4S", overwrite=TRUE)
 
-writeRaster(map_anomalies2004,
-            filename = paste0( getwd(), "/data/mohinora_anomalies/2004" ),
-            format="GTiff", datatype="FLT4S", overwrite=TRUE)
+raster::writeRaster(map_anomalies2004,
+                    filename = paste0( getwd(), "/TIF/mohinora_anomalies/2004" ),
+                    format="GTiff", datatype="FLT4S", overwrite=TRUE)
 
-writeRaster(map_anomalies2008,
-            filename = paste0( getwd(), "/data/mohinora_anomalies/2008" ),
-            format="GTiff", datatype="FLT4S", overwrite=TRUE)
+raster::writeRaster(map_anomalies2008,
+                    filename = paste0( getwd(), "/TIF/mohinora_anomalies/2008" ),
+                    format="GTiff", datatype="FLT4S", overwrite=TRUE)
 
 # -----------------------
 # --- VISUALIZACION --- #

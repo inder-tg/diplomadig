@@ -29,6 +29,10 @@ Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satel
 
 - Directorio /data/USV7 distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
 
+## Segunda Sesión (Agosto 16)
+
 - Directorio /data/mohinora usado en ```mohinora_imputation.R```
+
+- Uso de ```mohinora_imputation.R```, ```mohinora_anomalies.R```
 
 </details>

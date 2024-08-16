@@ -3,11 +3,11 @@
 # --- Módulo IX: Percepcion Remota: Análisis de series de tiempo de imágenes satelitales con R
 
 # --- Elaborado: Agosto 8, 2024
-# --- Impartido: Agosto 10, 2022
+# --- Impartido: Agosto 10, 2024
 
-# --- En este script presentamos un ejemplo para imputar estadísticamente (rellenar)
-# --- las primeras 3 fechas del DATASET con base en la curva de climatología.
-# --- Usamos código en paralelo para eficientar el cómputo a alta escala
+# --- En este script usamos el paquete tmap para generar mapas estáticos de Cerro
+# --- Mohinora, Chihuahua y de los tipos de uso de suelo y vegetación de esta
+# --- región de interés.
 
 # --- DATASET: 
 # --- Los directorios ANP y USV7 deben descargarse de la nube del Diplomado
