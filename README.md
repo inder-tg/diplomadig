@@ -33,6 +33,6 @@ Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satel
 
 - Directorio /data/mohinora usado en ```mohinora_imputation.R```
 
-- Uso de ```mohinora_imputation.R```, ```mohinora_anomalies.R```
+- Uso de ```mohinora_imputation.R```, ```mohinora_anomalies.R``` y ```mohinora_trendAnalysis.R``` 
 
 </details>
