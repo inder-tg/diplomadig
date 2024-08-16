@@ -174,7 +174,7 @@ pixel_output <- c(mohinora_NDVI_rTp$coords[xy$coord,], pixel_aug)
 
 # --- CODIGO EN PARALELO
 
-# ACTION REQUIRED!!!
+# # ACTION REQUIRED!!!
 # df_layer1 <- matrix(nrow=nrow(mohinora_NDVI_rTp), ncol=3)
 # df_layer1[,1:2] <- mohinora_NDVI_rTp[1:2,]
 # 
