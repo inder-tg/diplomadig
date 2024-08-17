@@ -35,4 +35,8 @@ Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satel
 
 - Uso de ```mohinora_imputation.R```, ```mohinora_anomalies.R``` y ```mohinora_trendAnalysis.R``` 
 
+## Tercera sesión (Agosto 17)
+
+- Uso de ```mohinora_trendAnalysis.R``` y ```mohinora_cps.R```
+
 </details>

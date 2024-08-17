@@ -58,6 +58,10 @@ mohinora_NDVI_rTp_full <- spRast_valueCoords(stack_NDVI_Mohinora)
 # --- Análisis de tendencias: Exploración #
 # -----------------------------------------
 
+plot( subset(stack_NDVI_Mohinora, 100) )
+# plot( shp_anp_sinu, add=TRUE, lwd=4) # ACTION REQUIRED!!!
+lines(shp_mohinora, lwd=4)
+
 # XY <- list(x=-10698785, y=2893289)
 
 # xy <- get_timeSeries_byClicking(c(XY$x, XY$y),
