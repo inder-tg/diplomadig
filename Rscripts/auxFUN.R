@@ -515,3 +515,48 @@ trendAnalysis <- function(x, startYear, endYear, frequency, productName){
 }
 
 
+# --- Added on Aug 21, 2024
+
+sephora_fpca <- function(x_sephora, x) {
+  gg_sephora <- plot(x=x_sephora, type="profiles",
+                     xLab="DoY", yLab="NDVI (no rescaled)")
+  x_axis <- get_metadata_years(x=x, startYear=2000, 
+                               endYear=2023, frequency=23)
+  
+  DoY <- seq(1,365, by=16)
+  fpca_DoY <- x_sephora$fpca_fun_0der(t=DoY)
+  COLORS <- unique( ggplot_build(gg_sephora)$data[1][[1]]$colour )
+  
+  df_sephora <- data.frame(values=c(c(t(x_sephora$x_smooth)), fpca_DoY),
+                           years=as.factor(rep(c(x_axis$xLabels,"FPCA"),
+                                               each=23)),
+                           DoY=factor(DoY, levels=DoY), 
+                           class=c(rep(1,length(x)), rep(2,23))) 
+  
+  gg_fpca_sephora <- ggplot(data=df_sephora, 
+                            aes(x=DoY, y=values, group=years, colour=years)) +
+    ggplot2::geom_line(linewidth = c(rep(1,length(x)),
+                                     rep(4,23))) + 
+    ggplot2::labs(y="NDVI", x="", color="") + 
+    ggplot2::scale_color_manual(values = c(COLORS, "#FF4500")) +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme(axis.title.x.bottom = element_text(size=18),
+                   axis.title.y.left = element_text(size=18),
+                   axis.text.x = element_text(size=14, face = "bold"),
+                   axis.text.y.left = element_text(size=14, face="bold"),
+                   legend.title = element_text(size=20),
+                   legend.text = element_text(size=18)) +
+    ggplot2::theme(legend.key = element_blank(), 
+                   legend.key.width = unit(2,"line"))
+  
+  gg_output <- gg_fpca_sephora + guides(color=guide_legend(override.aes =
+                                                             list(linewidth=c(rep(1.25,24),4))))
+  
+  DoY_forPlot <- DoY
+  DoY_forPlot[seq(2,length(DoY), 2)] <- rep("", length(seq(2,length(DoY), 2)))
+  
+  gg_output + scale_x_discrete(breaks=DoY, labels=DoY_forPlot)
+}
+
+
+

@@ -37,17 +37,25 @@ source( paste0( getwd(), "/Rscripts/auxFUN.R" ) )
 
 # --- DATA Loading
 
+dataDIR <- paste0( getwd(), "/data" )
+
+listDIRS <- list.dirs(path = dataDIR)[-1]
+
 listFILES_mohinora <- list.files(path=paste0(getwd(), "/TIF"), 
                                  pattern=".tif$", 
                                  full.names=TRUE)
 
-listFILES_mohinora <- list.files(path=paste0(getwd(), "/data/mohinora"), 
+listFILES_mohinora <- list.files(path=listDIRS[2], 
                                  pattern=".tif$", 
                                  full.names=TRUE)
 
-shpFILES_mohinora <- list.files(path=paste0(getwd(), "/data/shp_mohinora"), 
+shpFILES_mohinora <- list.files(path=listDIRS[6], 
                                 pattern=".shp$", 
                                 full.names=TRUE)
+
+shpFILES_USV7 <- list.files(path=listDIRS[7],
+                            pattern = ".shp$",
+                            full.names = TRUE) # cambiar 7 por 5
 
 # mohinora_DATA_interpol <- stack( listFILES_mohinora[1] ) # ACTION REQUIRED!!!
 mohinora_DATA_interpol <- rast( listFILES_mohinora[1] )
@@ -57,6 +65,14 @@ mohinora_shp <- read_sf( shpFILES_mohinora[1] )
 
 # mohinora_DATA_interpol_rTp <- rasterToPoints(stack_NDVI_Mohinora) # ACTION REQUIRED!!!
 mohinora_DATA_interpol_rTp <- spRast_valueCoords(mohinora_DATA_interpol)
+
+shp_USV7 <- read_sf( shpFILES_USV7[1] ) # LCC
+
+shp_USV7_sinu <- st_transform(x=shp_USV7, crs=st_crs(mohinora_shp)) # time consuming
+
+mohinora_USV7 <- st_intersection(x=shp_USV7_sinu, y=mohinora_shp)
+
+write_sf(mohinora_USV7, dsn=paste0( getwd(), "/data/shp_mohinora/mohinora_usv7.shp" ))
 
 # -------------------------------------------------
 # --- Análisis de cambio abrupto: Exploración --- #
