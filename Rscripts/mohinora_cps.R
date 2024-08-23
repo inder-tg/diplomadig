@@ -20,7 +20,6 @@
 # --- Preámbulo
 library(terra)
 library(raster)
-# library(rasterVis)
 library(mapview)
 library(RColorBrewer)
 library(gtools)
@@ -41,11 +40,7 @@ dataDIR <- paste0( getwd(), "/data" )
 
 listDIRS <- list.dirs(path = dataDIR)[-1]
 
-listFILES_mohinora <- list.files(path=paste0(getwd(), "/TIF"), 
-                                 pattern=".tif$", 
-                                 full.names=TRUE)
-
-listFILES_mohinora <- list.files(path=listDIRS[2], 
+listFILES_mohinora <- list.files(path=listDIRS[3], 
                                  pattern=".tif$", 
                                  full.names=TRUE)
 
@@ -334,7 +329,7 @@ COLOR_USV <- c(usv_COLORS[1],
 
 # --- definiendo un bbox a usar en el tmap
 
-bbox_new <- st_bbox(mohinora_SHP_USV_st) # current bounding box
+bbox_new <- st_bbox(mohinora_USV7) # current bounding box
 
 xrange <- bbox_new$xmax - bbox_new$xmin # rango x
 yrange <- bbox_new$ymax - bbox_new$ymin # rango y
@@ -380,6 +375,7 @@ type_map
 
 # -------------------------------
 # --- RESUMEN dE RESULTADOS --- #
+# --- Pendiente, Tercera Clas ---
 # -------------------------------
 
 getCorrectPercent <- function(x){
@@ -393,12 +389,23 @@ getCorrectPercent <- function(x){
   cbind.data.frame(TYPE=types, PERCENT=round(y/sum(x_na$fraction) * 100, digits=3) )
 }
 
+
+trunk <- mohinora_USV7 %>%
+  dplyr::select( DESCRIPCIO ) %>%
+  st_drop_geometry() 
+
+df_exact <- trunk %>%
+  apply(MARGIN = 1,
+        FUN = function(x) terra::extract(mohinora_cps_TYPE,
+                                         dplyr::filter(mohinora_USV7,
+                                                       DESCRIPCIO == x),
+                                         exact = TRUE)) 
+
+names(df_exact) <- trunk$DESCRIPCIO
+
 df_exact <- df_exact[!duplicated(df_exact)]
 
 df_exact_percent <- lapply(df_exact, function(s) getCorrectPercent(s)) 
-
-cbind(df$`VEGETACIÓN SECUNDARIA ARBÓREA DE BOSQUE DE PINO`,
-      df_exact_percent$`VEGETACIÓN SECUNDARIA ARBÓREA DE BOSQUE DE PINO`)
 
 # ---
 
@@ -422,7 +429,7 @@ df_type[is.na(df_type)] <- 0
 
 t(df_type) %>%
   kbl(digits=2, 
-      caption = "Porcentaje de área con tendencia positiva (creciente) o negativa (decreciente).") %>%
+      caption = "Porcentaje de área clasificada por tipo de tendencias .") %>%
   kable_minimal(full_width = FALSE, html_font = "Cambria",
                 font_size=20)
 
@@ -439,7 +446,7 @@ t(df_type) %>%
   kbl(digits=2, booktabs = TRUE,
       caption = "Porcentaje de distintos tipos de
       tendencia por tipo de uso de suelo y vegetación usando 'terra::exact'") %>%
-  kable_minimal(full_width = FALSE, font_size=10) %>%
+  kable_minimal(full_width = FALSE, font_size=20) %>%
   # kable_styling(latex_options = "striped", full_width = FALSE,
   #               font_size = 10) %>%
   column_spec(1, color = usv_COLORS_sorted) %>%
@@ -447,36 +454,4 @@ t(df_type) %>%
 # color = COLORES_update)
 
 # ----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
