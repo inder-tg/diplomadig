@@ -39,11 +39,11 @@ Módulo IX "Percepción Remota: Análisis de series de tiempo de imágenes satel
 
 - Uso de ```mohinora_trendAnalysis.R``` y ```mohinora_cps.R```
 
-## Cuarta sesión (Agosto 18)
+## Cuarta sesión (Agosto 23)
 
 - Uso de ```mohinora_cps.R``` y ```mohinora_sephora.R```.
 
-**NOTA:** El portal de residencia de ```ComplexHetmap``` es [https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html](Bioconductor). Por esta razón,
+**NOTA:** El portal de residencia de ```ComplexHetmap``` es [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html). Por esta razón,
 las instrucciones para instalar el paquete ```ComplexHetmap``` son ligeramente distintas a las discutidas
 hasta ahora. De acuerdo al portal mencionado, las instrucciones para installar ```ComplexHetmap``` en R (en versiones superiores a la 4.4) son:
 
