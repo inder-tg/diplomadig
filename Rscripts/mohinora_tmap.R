@@ -1,6 +1,9 @@
 
 # --- Diplomado Geomática, IG, UNAM, 2024
 # --- Módulo IX: Percepcion Remota: Análisis de series de tiempo de imágenes satelitales con R
+# --- Diplomado Geomática, IG, UNAM, 2025
+# --- Bloque 2: Sistemas de Información Geográfica
+# --- Módulo V: R como herramienta de SIG
 
 # --- Elaborado: Agosto 8, 2024
 # --- Actualizado: Abril 4, 2025
@@ -10,9 +13,9 @@
 # --- región de interés.
 
 # --- DATASET: 
-# --- Los directorios ANP y USV7 deben descargarse de la nube del Diplomado
+# --- El directorio ANP debe descargarse de la nube del Diplomado
 
-# --- Preámbulo
+# --- Preámbulo END
 
 library(sf)
 library(tmap)
@@ -27,11 +30,11 @@ anpFILES <- list.files(path = listDIRS[2],
                    full.names = TRUE,
                    pattern = ".shp$")
 
-usvFILES <- list.files(path = listDIRS[7],
+usvFILES <- list.files(path = listDIRS[6],
                   full.names = TRUE,
                   pattern = ".shp$")
 
-ndviFILES <- list.files(path = listDIRS[5],
+ndviFILES <- list.files(path = listDIRS[4],
                         full.names = TRUE,
                         pattern = ".tif$")
 
@@ -59,15 +62,6 @@ mohinora_shp_sinu <- st_transform(x=mohinora_shp_GCS,
                                   crs=st_crs(mohinora_USV))
 
 # ---
-
-# usv_COLORS <- c("#E9D66B", "#00A877", "#66B032", "#A9A9A9")
-# usv_NAMES <- c("Pastizales", "Pino-Encino", "Ayarin", "Agricultura")
-# 
-# COLOR_USV <- c("white", rep(usv_COLORS[2],2), 
-#                usv_COLORS[3], 
-#                rep(usv_COLORS[1],2),
-#                rep(usv_COLORS[4], length(7:12)), 
-#                rep("white", 22-12))
 
 usv_COLORS <- c("#A1E5A5", "#E9D66B", "#00A877", 
                 "#66B032", "#83A4F0", "#FC8FAB", "#F500A1")

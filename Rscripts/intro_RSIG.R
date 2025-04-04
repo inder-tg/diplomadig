@@ -3,8 +3,6 @@
 # --- Módulo X Análisis de series de tiempo de imágenes satelitales con R
 # --- Diplomado Geomática, IG, UNAM, 2024
 # --- Módulo IX Percepción Remota: Análisis de series de tiempo de imágenes satelitales con R
-
-
 # --- Diplomado Geomática, IG, UNAM, 2025
 # --- Bloque 2: Sistemas de Información Geográfica
 # --- Módulo V: R como herramienta de SIG
@@ -25,11 +23,12 @@
 # --- "# CODE # === son compatibles con el paquete raster; para tener un ejemplo
 # --- de una línea de código comentada con este formato ver la línea 29
 
-# --- Preámbulo
+# --- Preámbulo END
 
 # --- Instalación de todos los paquetes a utilizar en este módulo
 source( "Rscripts/auxPKG.R" )
 
+# --- Habilitación de los paquetes a utilizar en este script
 # library(raster) # ===
 library(terra)
 library(mapview)
@@ -284,11 +283,3 @@ matClass <- matrix(c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5,
 vegc <- classify(ndvi_fun, matClass)
 plot(vegc, col = rev(terrain.colors(5)), main = 'NDVI based thresholding')
 # -----------------------------------------------------------------------------
-
-
-
-
-
-
-
-
