@@ -3,7 +3,7 @@
 # --- Módulo IX: Percepcion Remota: Análisis de series de tiempo de imágenes satelitales con R
 
 # --- Elaborado: Agosto 8, 2024
-# --- Impartido: Agosto 10, 2024
+# --- Actualizado: Abril 4, 2025
 
 # --- En este script usamos el paquete tmap para generar mapas estáticos de Cerro
 # --- Mohinora, Chihuahua y de los tipos de uso de suelo y vegetación de esta
@@ -23,32 +23,40 @@ DIR <- paste0(getwd(), "/data")
 
 listDIRS <- list.dirs(path=DIR)
 
-ANPs <- list.files(path = listDIRS[1],
+anpFILES <- list.files(path = listDIRS[2],
                    full.names = TRUE,
                    pattern = ".shp$")
 
-USV <- list.files(path = listDIRS[4],
+usvFILES <- list.files(path = listDIRS[7],
                   full.names = TRUE,
                   pattern = ".shp$")
 
+ndviFILES <- list.files(path = listDIRS[5],
+                        full.names = TRUE,
+                        pattern = ".tif$")
 
-ANP <- read_sf(ANPs)
+shpANP <- read_sf(anpFILES)
 
-USV7 <- read_sf(USV)
+mohinora_USV <- read_sf(usvFILES)
 
-which(ANP$NOMBRE == "Cerro Mohinora")
+# ---
 
-plot(ANP[144,])
+which(shpANP$NOMBRE == "Cerro Mohinora")
 
-str(USV7)
+plot(shpANP[144,])
 
-USV7$geometry
+plot( st_geometry(shpANP[144,]), lwd = 4 )
 
-mohinora_poligono_GCS <- ANP[144,]
+str(mohinora_USV)
 
-mohinora_poligono_LCC <- st_transform(x=mohinora_poligono_GCS, crs=st_crs(USV7))
+mohinora_USV$geometry
 
-mohinora_USV7 <- st_intersection(x=USV7, y=mohinora_poligono_LCC)
+shpANP$geometry
+
+mohinora_shp_GCS <- shpANP[144,]
+
+mohinora_shp_sinu <- st_transform(x=mohinora_shp_GCS, 
+                                  crs=st_crs(mohinora_USV))
 
 # ---
 
@@ -75,10 +83,10 @@ COLOR_USV <- c(usv_COLORS[1],
                rep(usv_COLORS[6], 9),
                usv_COLORS[7])
 
-# --- Adding variable COLOR to sf-object mohinora_SHP_USV_st 
-mohinora_USV7$COLOR <- COLOR_USV
+# --- Adding variable COLOR to sf-object mohinora_USV 
+mohinora_USV$COLOR <- COLOR_USV
 
-shp_mohinora_rect <- tm_shape(mohinora_USV7) +
+shp_mohinora_rect <- tm_shape(mohinora_USV) +
   tm_borders(lwd = 3) +
   tm_graticules(n.x=4,
                 labels.size=1.5) +
@@ -104,7 +112,7 @@ shp_mohinora_rect
 
 # ---
 
-bbox_new <- st_bbox(mohinora_USV7) # current bounding box
+bbox_new <- st_bbox(mohinora_USV) # current bounding box
 
 xrange <- bbox_new$xmax - bbox_new$xmin # range of x values
 yrange <- bbox_new$ymax - bbox_new$ymin # range of y values
@@ -119,7 +127,7 @@ bbox_new <- bbox_new %>%  # take the bounding box ...
 
 # ---
 
-shp_mohinora_fill <- tm_shape(mohinora_USV7, bbox=bbox_new) +
+shp_mohinora_fill <- tm_shape(mohinora_USV, bbox=bbox_new) +
   tm_borders(lwd = 3) +
   tm_graticules(n.x=4,
                 labels.size=1.5) +
@@ -145,11 +153,11 @@ shp_mohinora_fill
 
 # ---
 
-mohinora_USV7_lines <- mohinora_USV7 %>%
+mohinora_USV_lines <- mohinora_USV %>%
   st_cast("MULTILINESTRING")
 
 
-shp_mohinora_lines <- tm_shape(mohinora_USV7_lines, 
+shp_mohinora_lines <- tm_shape(mohinora_USV_lines, 
                       bbox = bbox_new) +
   tm_lines(col = "COLOR", lwd=3) +
   tm_compass(type = "8star", position = c("right", "bottom")) +
@@ -166,12 +174,8 @@ shp_mohinora_lines <- tm_shape(mohinora_USV7_lines,
 
 shp_mohinora_lines
 
-# tm_layout(legend.outside = TRUE,
-#           legend.stack = "horizontal",
-#           legend.outside.position = "bottom",
-#           legend.outside.size = 0.1, 
-#           legend.text.size = 1,
-#           legend.title.size=1.5,
-
-
 # ---
+
+st_write(mohinora_shp_sinu,
+         dsn = paste0( getwd(), "/data/outputs/mohinora_shp_sinu.shp" ))
+

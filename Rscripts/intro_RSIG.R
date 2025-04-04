@@ -5,12 +5,16 @@
 # --- Módulo IX Percepción Remota: Análisis de series de tiempo de imágenes satelitales con R
 
 
+# --- Diplomado Geomática, IG, UNAM, 2025
+# --- Bloque 2: Sistemas de Información Geográfica
+# --- Módulo V: R como herramienta de SIG
+
 # --- Elaborado: Junio 2, 2022
 # --- Impartido: Junio 24, 2022
-# --- Modificado: Julio 25, 2023; Agosto 9, 2024
+# --- Modificado: Julio 25, 2023; Agosto 9, 2024; Abril 4, 2025
 
-# --- En este script presentamos ejemplos para usar los paquetes raster,
-# --- mapview, RColorBrewer y discutimos algunas ideas para realizar análisis 
+# --- En este script presentamos ejemplos para usar los paquetes raster, terra,
+# --- mapview, sp, RColorBrewer, sf y discutimos algunas ideas para realizar análisis 
 # --- exploratorio de imágenes satelitales.
 # --- Basado en Cap. 2 de Remote sensing image analysis disponible en
 # --- http://rspatial.org/analysis/rst/9-remotesensing.html
@@ -24,13 +28,15 @@
 # --- Preámbulo
 
 # --- Instalación de todos los paquetes a utilizar en este módulo
-source( paste0( getwd(), "/Rscripts/auxPKG.R" ) )
+source( "Rscripts/auxPKG.R" )
 
 # library(raster) # ===
 library(terra)
 library(mapview)
+library(sp)
 library(RColorBrewer)
 library(gtools)
+library(sf)
 
 # --- Lectura de archivos
 dirDATA_rspatial <- paste0( getwd(), "/data/rspatial" )
@@ -117,11 +123,11 @@ plotRGB(landsat, 1,2,3, stretch = "lin")
 plotRGB(landsatCrop, 3,2,1, stretch = "lin", add = T)
 
 # saving results to disk
-# test <- getwd()
-# setwd(paste(rootDir, "/data/rspatial", sep = ""))
-# writeRaster(landsatCrop, filename = "cropped-landsat.tif", format = "GTiff", 
-#             overwrite = TRUE)
-# setwd(test)
+outDIR <- paste0( getwd(), "/data/outputs" )
+dir.create(outDIR)
+nameFILE <- paste0( outDIR, "/cropped-landsat.tif" )
+writeRaster(landsatCrop, filename = nameFILE, datatype = "FLT4S",
+            overwrite = TRUE)
 
 # --------------------------------------------
 # Extraer valores de un subconjunto del stack:
@@ -162,7 +168,7 @@ ms
 # plot de perfiles espectrales
 
 # paleta de colores para las clases de cobertura del suelo
-mycolor <- c("darkred", "yellow", "burlywood", "cyan", "blue")
+mycolor <- c("darkred", "green", "burlywood", "magenta", "blue")
 
 # convertir ms de data.frame a matrix (una conveniencia)
 ms <- as.matrix(ms)
@@ -258,7 +264,6 @@ compareGeom(vegNDVI, vegReclassify)
 # El histograma de ndvi_fun tiene un "pico" alrededor del intervalo (0.25, 0.3)
 # abajo mostramos 2 formas de resaltar las áreas con valores en  
 
-
 # land <- reclassify(ndvi_fun, c(-Inf, 0.25, NA, 0.25, 0.3, 1, 0.3, Inf, NA)) # ===
 (matClass <- matrix(c(-Inf, 0.25, NA, 0.25, 0.3, 1, 0.3, Inf, NA), ncol=3, byrow = TRUE))
 
@@ -279,3 +284,11 @@ matClass <- matrix(c(-Inf, 0.25, 1, 0.25, 0.3, 2, 0.3, 0.4, 3, 0.4, 0.5,
 vegc <- classify(ndvi_fun, matClass)
 plot(vegc, col = rev(terrain.colors(5)), main = 'NDVI based thresholding')
 # -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+

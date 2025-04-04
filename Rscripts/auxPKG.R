@@ -10,7 +10,7 @@
 #
 # -----------------------------------------------------------------------------
 
-neededPackages <- c("raster", "mapview", "RColorBrewer", "gtools",
+neededPackages <- c("raster", "mapview", "sp", "RColorBrewer", "gtools",
                     "foreach", "doParallel", "Kendall", "trend",
                     "geoTS", "sta", "rasterVis", "bfast", "tmap", 
                     "ggplot2", "dplyr", "terra")
