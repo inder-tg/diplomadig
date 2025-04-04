@@ -60,15 +60,13 @@ BiocManager::install("ComplexHeatmap")
 <details>
 <summary>XVIII Edición, 2025</summary>
 
-Bloque 2, Módulo V "R como herramienta de SIG"
+##Bloque 2, Módulo V "R como herramienta de SIG"
 
-## Primera Sesión (Abril 4): 
+# Primera Sesión (Abril 4): 
 
 - Directorio /data/rspatial usado en ```intro_RSIG.R```
 
 - Directorio /data/ANP distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
-
-- Directorio /data/USV7 distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
 
 </details>
 
