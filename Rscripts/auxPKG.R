@@ -10,10 +10,13 @@
 #
 # -----------------------------------------------------------------------------
 
-neededPackages <- c("raster", "mapview", "sp", "RColorBrewer", "gtools",
+neededPackages <- c("raster", 
+                    # "mapview", 
+                    "sp", "RColorBrewer", "gtools",
                     "foreach", "doParallel", "Kendall", "trend",
                     "geoTS", "sta", "rasterVis", "bfast", "tmap", 
-                    "ggplot2", "dplyr", "terra", "imputeTS")
+                    "ggplot2", "dplyr", "terra", "imputeTS",
+                    "numbers", "itertools", "gapfill")
 
 packagesToInstall <- neededPackages[!(neededPackages %in% installed.packages()[,"Package"])]
 
