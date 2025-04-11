@@ -68,6 +68,18 @@ BiocManager::install("ComplexHeatmap")
 
 - Directorio /data/ANP distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
 
+## Segunda Sesión (Abril 5):
+
+- Creación del directorio /data/mohinora/250m_16_days_NDVI_QA
+
+- Creación del directorio /data/outputs
+
+- Creación del directorio /data/outputs/mohinora_interpolation
+
+## Tercera Sesión (Abril 11):
+
+- Creación del directorio /data/mohinora/250m_16_days_NDVI_QA_byYears
+
 </details>
 
 
