@@ -4,7 +4,7 @@
 # --- y maxGapLength en rasterStack
 # --- DATASET: NDVI MOD13Q1 en Cerro Mohinora, Chihuahua, 2000-2023
 # --- Actualizado: Feb 24, 2024, Abril 5. 2025
-# --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2023 
+# --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2024
 
 # --- NOTA: Crear subdirectorios necesarios (/data/mohinora)
 
