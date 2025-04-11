@@ -36,8 +36,8 @@ mohinora_DATA_reliability <- rast(RELIABILITYfiles)
 # mohinoraRDataDIR <- paste0( mestiperDIR, "/RData" )
 
 SHPfiles <- list.files(path = DIRS[7],
-                         pattern = ".shp$",
-                         full.names = TRUE)
+                       pattern = ".shp$",
+                       full.names = TRUE)
 
 mohinora_shp <- read_sf(SHPfiles[1])
 
@@ -102,7 +102,7 @@ ndviQAFILES <- list.files( path = paste0( getwd(), "/data/mohinora/250m_16_days_
 mohinora_DATA_QA <- rast(ndviQAFILES)
 
 mohinora_DATA_QA_shp <- crop(mohinora_DATA_QA, mohinora_shp,
-                               mask=TRUE)
+                             mask=TRUE)
 
 mohinora_DATA_QA_rTp <- spRast_valuesCoords(mohinora_DATA_QA_shp)
 
@@ -140,10 +140,10 @@ write(as.character(Sys.time()[1]), file=progressReportFile,
 kluster <- parallel::makeCluster(numCores-1, outfile="")
 registerDoParallel(kluster)
 
-output <- foreach(i=1:nrow(mohinora_DATA_rTp$values), .combine="rbind",
+output <- foreach(i=1:nrow(mohinora_DATA_QA_rTp$values), .combine="rbind",
                   .packages="geoTS") %dopar% { 
                     
-                    pixel <- mohinora_DATA_rTp$values[i,]
+                    pixel <- mohinora_DATA_QA_rTp$values[i,]
                     
                     pixel_percentMiss <- sum(is.na(pixel)) / length(pixel) # length de cualquier pixel es 483
                     

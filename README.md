@@ -68,17 +68,25 @@ BiocManager::install("ComplexHeatmap")
 
 - Directorio /data/ANP distribuido a través de la nube del Diplomado y usado en ```mohinora_tmap.R```
 
+- Se empleó el script ```intro_RSIG.R``` y materiales auxiliares
+
 ## Segunda Sesión (Abril 5):
 
 - Creación del directorio /data/mohinora/250m_16_days_NDVI_QA
 
 - Creación del directorio /data/outputs
 
+- Creación del directorio /data/outputs/mohinora_QA
+
+- Creación del directorio /data/outputs/mohinora_imputation
+
 - Creación del directorio /data/outputs/mohinora_interpolation
+
+- Se emplearon los scripts ```mohinora_QA.R```, ```mohinora_imputation.R``` y ```mohinora_interpolation.R``` junto con algunos materiales auxiliares
 
 ## Tercera Sesión (Abril 11):
 
-- Creación del directorio /data/mohinora/250m_16_days_NDVI_QA_byYears
+- Creación del directorio /data/mohinora/250m_16_days_NDVI_QA_byYears y los sub-directorios auxiliares
 
 </details>
 

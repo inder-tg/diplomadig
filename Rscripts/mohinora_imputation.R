@@ -27,7 +27,7 @@ DIR <- paste0( getwd(), "/data/mohinora" )
 
 NDVIfiles <- list.files( path = paste0( DIR, "/250m_16_days_NDVI_QA" ), 
                          pattern = ".tif",
-                         full.names = TRUE, recursive = TRUE )
+                         full.names = TRUE )
 
 mohinora_DATA <- rast(NDVIfiles)  # stack(NDVIfiles)
 
@@ -138,13 +138,13 @@ df_layer2[,1:2] <- mohinora_DATA_rTp$coords
 df_layer3 <- matrix(nrow=nrow(mohinora_DATA_rTp$values), ncol=3)
 df_layer3[,1:2] <- mohinora_DATA_rTp$coords
 
-numCores <- detectCores()
-
 # progress report file (to check out on the process)
 
 DIR_progress <- paste0( getwd(), "/RData/progressReports/mohinora" )
-dir.create(DIR_RData, recursive = TRUE)
 
+if( !dir.exists(DIR_progress) ){
+  dir.create(DIR_RData, recursive = TRUE)
+}
 
 progressReportFile <- paste0( DIR_progress, "/progress_imputation.txt" )
 file.create(path=progressReportFile, showWarnings=FALSE)
@@ -153,6 +153,8 @@ write("===CLIMATOLOGY imputation began at===",
       file=progressReportFile, append=TRUE)
 write(as.character(Sys.time()[1]), file=progressReportFile,
       append=TRUE)
+
+numCores <- detectCores()
 
 kluster <- parallel::makeCluster(numCores-1, outfile="")
 registerDoParallel(kluster)
@@ -218,9 +220,9 @@ layer3 <- matrixToRaster(matrix=df_layer3, projection=PROJECTION)
 # --- Asegurarse de crear /outputs/mohinora_imputation
 # --- Guardando las imputaciones en archivos GeoTiff
 
-DIR_outpus <- paste0( getwd(), "/data/outputs/mohinora_imputation" )
+DIR_outputs <- paste0( getwd(), "/data/outputs/mohinora_imputation" )
 
-dir.create(DIR_outpus, recursive = TRUE)
+dir.create(DIR_outputs, recursive = TRUE)
 
 baseName <- "h08v06.061.2024022950859.250m_16_days_NDVI.tif"
 

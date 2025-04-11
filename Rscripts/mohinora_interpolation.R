@@ -28,7 +28,7 @@ SHPfiles <- list.files(path = paste0( getwd(), "/data/outputs" ),
 mohinora_shp <- read_sf(SHPfiles[1])
 
 
-FILES_NDVI_imputation <- list.files(path = paste0( getwd(), "/data/outputs/mohinora_QA" ), #mohinora_NDVI_imputation[1],
+FILES_NDVI_imputation <- list.files(path = paste0( getwd(), "/data/outputs/mohinora_imputation" ), #mohinora_NDVI_imputation[1],
                                     pattern = ".tif$",
                                     full.names = TRUE)
 
@@ -39,7 +39,6 @@ FILES_NDVI_QA <- list.files(path = paste0( getwd(), "/data/mohinora/250m_16_days
 FILES_NDVI <- c(FILES_NDVI_imputation, FILES_NDVI_QA)
 
 mohinora_DATA <- rast(FILES_NDVI) # raster::stack(FILES_NDVI)
-
 
 mohinora_DATA_rTp <- spRast_valuesCoords(mohinora_DATA) # rasterToPoints(mohinora_DATA)
 
@@ -134,15 +133,13 @@ mohinora_interpol_linear <- output
 
 # --- rasterization
 
-PROJECTION <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=m +no_defs"
-
 dirTIFS_toGet_names <- paste0(getwd(), "/data/mohinora/250m_16_days_NDVI")
 listTIFnames <- list.files(path = dirTIFS_toGet_names,
                            pattern = ".tif$",
                            full.names = TRUE)
 
-vectorNAMES <- character(549)
-for(i in 1:549){
+vectorNAMES <- character(length( listTIFnames ))
+for(i in 1:length( listTIFnames )){
   temp <- listTIFnames[i]
   aux <- strsplit(temp, "/")
   basename <- aux[[1]][ length(aux[[1]]) ]
@@ -153,12 +150,14 @@ for(i in 1:549){
 
 
 # --- asegurarse de crear /outputs/mohinora_interpolation
-DIR_interpol <- paste0( getwd(), "/outputs/mohinora_interpolation" )
+DIR_interpol <- paste0( getwd(), "/data/outputs/mohinora_interpolation" )
 dir.create(DIR_interpol, recursive = TRUE)
 
 # --- las primeras 3 columnas contienen valores de NDVI imputados
 # --- a través del procedimiento de climatología, por tanto, no es necesario
 # --- guardar esas capas nuevamente
+
+PROJECTION <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=m +no_defs"
 
 for(i in 4:ncol(mohinora_interpol_linear)){
   
@@ -174,9 +173,10 @@ for(i in 4:ncol(mohinora_interpol_linear)){
   
   raster::writeRaster(x=layer,
                       filename = paste0(DIR_interpol,
+                                        "/",
                                         vectorNAMES[i-3]),
                       format="GTiff",
-                      datatype="INT2S",
+                      datatype="INT4S",
                       overwrite=TRUE)
   
 }
