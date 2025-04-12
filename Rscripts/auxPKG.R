@@ -16,7 +16,8 @@ neededPackages <- c("raster",
                     "foreach", "doParallel", "Kendall", "trend",
                     "geoTS", "sta", "rasterVis", "bfast", "tmap", 
                     "ggplot2", "dplyr", "terra", "imputeTS",
-                    "numbers", "itertools", "gapfill", "heatmaply")
+                    "numbers", "itertools", "gapfill", "heatmaply",
+                    "vcd", "sephora")
 
 packagesToInstall <- neededPackages[!(neededPackages %in% installed.packages()[,"Package"])]
 

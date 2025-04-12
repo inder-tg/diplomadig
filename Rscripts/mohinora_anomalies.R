@@ -36,7 +36,7 @@ SHPfiles <- list.files(path = paste0( getwd(), "/data/outputs" ),
 mohinora_shp <- read_sf(SHPfiles[1])
 
 
-FILES_NDVI_imputation <- list.files(path = paste0( getwd(), "/data/outputs/mohinora_QA" ),
+FILES_NDVI_imputation <- list.files(path = paste0( getwd(), "/data/outputs/mohinora_imputation" ),
                                     pattern = ".tif$",
                                     full.names = TRUE)
 
