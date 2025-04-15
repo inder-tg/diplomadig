@@ -271,7 +271,7 @@ map_YEARS <- matrixToRaster(matrix=YEARS, projection=PROJECTION)
 
 # --- asegurarse de haber creado /data/outputs/mohinora_cps
 
-outputs_cps <- paste0( getwd(), "/data/outputs/mohiinora_cps" )
+outputs_cps <- paste0( getwd(), "/data/outputs/mohinora_cps" )
 
 dir.create(outputs_cps)
 
@@ -329,7 +329,7 @@ COLOR_USV <- c(usv_COLORS[1],
 
 # --- definiendo un bbox a usar en el tmap
 
-bbox_new <- st_bbox(mohinora_USV7) # current bounding box
+bbox_new <- st_bbox(mohinora_shp_usv7) # current bounding box
 
 xrange <- bbox_new$xmax - bbox_new$xmin # rango x
 yrange <- bbox_new$ymax - bbox_new$ymin # rango y
@@ -344,7 +344,7 @@ bbox_new <- bbox_new %>%
 
 # --- definiedo un st multistring para usarlo en tm_lines()
 
-visual_mohinora <- mohinora_shp %>%
+visual_mohinora <- mohinora_shp_usv7 %>%
   sf::st_cast("MULTILINESTRING")
 
 visual_mohinora$COLOR <- COLOR_USV
@@ -353,7 +353,9 @@ visual_mohinora$COLOR <- COLOR_USV
 
 type_map = tm_shape(mohinora_cps_TYPE, 
                     bbox = bbox_new) +
-  tm_raster(style = "cont", palette = COLORES_update, 
+  tm_raster(col.scale = tm_scale(), 
+            # style = "cont", 
+            palette = COLORES_update, 
             legend.show = TRUE,
             title="Trend types") +
   tm_shape(visual_mohinora) + tm_lines(col="COLOR", lwd=3) + 
@@ -363,7 +365,7 @@ type_map = tm_shape(mohinora_cps_TYPE,
                position = c("right", "bottom")) +
   tm_add_legend("symbol", 
                 labels=usv_NAMES, 
-                col=usv_COLORS,
+                fill=usv_COLORS,
                 border.col = "grey40",
                 size=1,
                 shape=18,

@@ -445,11 +445,11 @@ plot_central_pnorm <- function(q){
 
 # --- 
 
-spRast_valueCoords <- function(spRaster, na_rm=FALSE){
+spRast_valuesCoords <- function(spRaster, na_rm=FALSE){
   
   spPoints <- as.points(spRaster, na.rm=na_rm)
   
-  spValues <- extract(spRaster, spPoints)
+  spValues <- terra::extract(spRaster, spPoints)
   
   DIM <- dim(spValues)
   
@@ -516,27 +516,30 @@ trendAnalysis <- function(x, startYear, endYear, frequency, productName){
 
 
 # --- Added on Aug 21, 2024
+# --- Modified on April 15, 2025
 
-sephora_fpca <- function(x_sephora, x) {
+sephora_fpca <- function(x_sephora, x, startYear=2000, endYear=2024,
+                         frequency = 23) {
+  
   gg_sephora <- plot(x=x_sephora, type="profiles",
                      xLab="DoY", yLab="NDVI (no rescaled)")
-  x_axis <- get_metadata_years(x=x, startYear=2000, 
-                               endYear=2023, frequency=23)
+  x_axis <- get_metadata_years(x=x, startYear=startYear, 
+                               endYear=endYear, frequency=frequency)
   
-  DoY <- seq(1,365, by=16)
+  DoY <- seq(1,365, by= ceiling(365/frequency) )
   fpca_DoY <- x_sephora$fpca_fun_0der(t=DoY)
   COLORS <- unique( ggplot_build(gg_sephora)$data[1][[1]]$colour )
   
   df_sephora <- data.frame(values=c(c(t(x_sephora$x_smooth)), fpca_DoY),
                            years=as.factor(rep(c(x_axis$xLabels,"FPCA"),
-                                               each=23)),
+                                               each=frequency)),
                            DoY=factor(DoY, levels=DoY), 
-                           class=c(rep(1,length(x)), rep(2,23))) 
+                           class=c(rep(1,length(x)), rep(2,frequency))) 
   
   gg_fpca_sephora <- ggplot(data=df_sephora, 
                             aes(x=DoY, y=values, group=years, colour=years)) +
     ggplot2::geom_line(linewidth = c(rep(1,length(x)),
-                                     rep(4,23))) + 
+                                     rep(4,frequency))) + 
     ggplot2::labs(y="NDVI", x="", color="") + 
     ggplot2::scale_color_manual(values = c(COLORS, "#FF4500")) +
     ggplot2::theme(legend.position = "none") +
@@ -550,7 +553,7 @@ sephora_fpca <- function(x_sephora, x) {
                    legend.key.width = unit(2,"line"))
   
   gg_output <- gg_fpca_sephora + guides(color=guide_legend(override.aes =
-                                                             list(linewidth=c(rep(1.25,24),4))))
+                                                             list(linewidth=c(rep(1.25,length(startYear:endYear)),4))))
   
   DoY_forPlot <- DoY
   DoY_forPlot[seq(2,length(DoY), 2)] <- rep("", length(seq(2,length(DoY), 2)))

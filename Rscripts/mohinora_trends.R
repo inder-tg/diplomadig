@@ -249,9 +249,9 @@ mohinora_trends <- crop(x=slopeMap,
 mohinora_trends_map = tm_shape(mohinora_trends, 
                                bbox = mohinora_shp) +
   tm_raster(col.scale = tm_scale(), 
-            palette = "brewer.yl_gn", 
+            palette = "brewer.rd_yl_gn", 
             legend.show = TRUE,
-            col.legend = "Linear trend slope") +
+            col.legend = tm_legend("Linear trend slope")) +
   tm_shape(mohinora_shp) + tm_borders() +
   tm_title("Cerro Mohinora", frame = FALSE, bg.color = NA) +
   tm_compass(type = "8star", position = c("right", "bottom")) +

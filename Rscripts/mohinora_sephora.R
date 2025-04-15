@@ -11,11 +11,18 @@
 
 # --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2024
 
-# --- NOTA: Este código no es completamente automático; de vez en vez se requerirá
-# --- crear folders o descomentar líneas de código (por ejemplo en el uso de rutinas ligada al paquete raster),
-# --- esas líneas están marcada con el texto "ACTION REQUIRED!!!"
+# --- NOTA: Este código requiere actualizarse incorporando sephora v.0.1.40
+
 
 # --- Preámbulo
+
+(!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager", source = TRUE)
+
+library(BiocManager)
+BiocManager::install("ComplexHeatmap")
+
+library(ComplexHeatmap)
 library(sephora)
 library(sf)
 library(terra)
@@ -74,9 +81,9 @@ COLOR_USV <- c(usv_COLORS[1],
 
 # --- PLOT base
 
-image(subset(mohinora_DATA_interpol, 453), col=rev(terrain.colors(255)))
+image(subset(mohinora_DATA, 453), col=rev(terrain.colors(255)))
 legend("topright", legend = usv_NAMES, col = usv_COLORS, lwd=4)
-lines(mohinora_USV7, col=COLOR_USV, lwd=6)
+lines(mohinora_shp_usv7, col=COLOR_USV, lwd=4)
 
 # --- Exploración sobre Pastizal (coord 2168 tiene un pixel de textbook)
 
@@ -164,10 +171,10 @@ pixel_agro <- mohinora_DATA_rTp$values[xy$coord, ] * 1e-4
 BASIS <- drbasis(n=50, q=2)
 
 output_agro <- phenopar(x=pixel_agro,
-                            startYear=2000, endYear=2024, 
-                            frequency=23, basis=BASIS,
-                            distance="dtw_basic", 
-                            clusterSize=15, numFreq=3, k=2)
+                        startYear=2000, endYear=2024, 
+                        frequency=23, basis=BASIS,
+                        distance="dtw_basic", 
+                        clusterSize=15, numFreq=3, k=2)
 
 # ---
 
@@ -365,10 +372,10 @@ pixel_pinoEncino <- mohinora_DATA_rTp$values[xy$coord, ]  * 1e-4
 BASIS <- drbasis(n=50, q=2)
 
 output_pinoEncino <- phenopar(x=pixel_pinoEncino,
-                          startYear=2000, endYear=2024, 
-                          frequency=23, basis=BASIS,
-                          distance="dtw_basic", 
-                          clusterSize=15, numFreq=2, k=2)
+                              startYear=2000, endYear=2024, 
+                              frequency=23, basis=BASIS,
+                              distance="dtw_basic", 
+                              clusterSize=15, numFreq=2, k=2)
 
 # ---
 
@@ -503,7 +510,7 @@ GU <- matrixToRaster(matrix = GU_mat,
                      projection = PROYECTION)
 
 SoS <- matrixToRaster(matrix = SoS_mat,
-                     projection = PROYECTION)
+                      projection = PROYECTION)
 
 Mat <- matrixToRaster(matrix = Mat_mat,
                       projection = PROYECTION)
@@ -545,51 +552,3 @@ vcd::grid_legend(x=1.215, y=0.125, pch=18, col=colores,
                  frame=FALSE,
                  labels=c("GU","SoS","Mat","Sen","EoS","Dor"),
                  title="Params")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
