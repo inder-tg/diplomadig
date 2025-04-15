@@ -80,24 +80,27 @@ BiocManager::install("ComplexHeatmap")
 
 - Creación del directorio /data/outputs/mohinora_imputation
 
-- Creación del directorio /data/outputs/mohinora_interpolation
-
-- Se emplearon los scripts ```mohinora_QA.R```, ```mohinora_imputation.R``` y ```mohinora_interpolation.R``` junto con algunos materiales auxiliares
+- Se emplearon los scripts ```mohinora_QA.R``` y ```mohinora_imputation.R``` junto con algunos materiales auxiliares
 
 ## Tercera Sesión (Abril 11):
 
 - Creación del directorio /data/mohinora/250m_16_days_NDVI_QA_byYears y los sub-directorios auxiliares
 
+- Creación del directorio /data/outputs/mohinora_interpolation
+
 - Creación del directorio /data/outputs/mohinora_igapfill
 
 - Creación del directorio /data/outputs/mohinora_anomalies
 
-## Tercera Sesión (Abril 12):
+- Se emplearon los scripts ```mohinora_interpolation.R```, ```mohinora_igapfill.R``` y ```mohinora_anomalies.R``` junto con algunos materiales auxiliares
+
+## Cuarta Sesión (Abril 12):
 
 - Creación del directorio /data/outputs/mohinora_trends
 
 - Creación del directorio /data/outputs/mohinora_cps
 
+- Se emplearon los scripts ```mohinora_trends.R```, ```mohinora_cps.R``` y ```mohinora_sephora.R``` junto con algunos materiales auxiliares
 </details>
 
 
