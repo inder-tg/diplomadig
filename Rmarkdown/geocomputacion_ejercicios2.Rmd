@@ -1,0 +1,41 @@
+---
+title: |
+  | Introducción a la Geocomputación con R
+  | Ejercicios: R como herramienta para SIG
+author: "Inder Tecuapetla"
+date: "Agosto 1, 2026 \\hfill itecuapetla@conabio.gob.mx"
+output: html_document
+---
+
+# 📅 ➡️ 📊 Ejercicio 1: Filtrar por fecha de incorporación
+
+  - Usa la columna _Fecha de incorporación al DENUE_.
+
+  - Filtra los cines que se incorporaron después de 2015.
+
+  - Grafica con ```ggplot``` el número de cines incorporados por año.
+
+Reflexiona: ¿hay un patrón de crecimiento o estancamiento?
+
+# 🛣️ 🎨 🗺️ Ejercicio 2: Mapear por tipo de vialidad
+
+  - Usa la columna _Tipo de vialidad_ (ej. “CALLE”, “AVENIDA”).
+
+  - Crea un conteo de cines por tipo de vialidad.
+
+  - Haz un gráfico de barras con ```ggplot``` mostrando la distribución.
+
+**Bonus:** en ```leaflet```, cambia el color de los puntos según el tipo de vialidad.
+
+# 🏠 🔢 🗺️ Ejercicio 3: Análisis por código postal 
+
+  - Usa la columna _Código Postal_.
+
+  - Calcula el número de cines por código postal.
+
+  - **(Opcional)** Une esa información con un shapefile de códigos postales (si lo tienes).
+
+  - Visualiza con ```tmap``` un mapa coloreado por número de cines en cada CP.
+
+**Bonus:** añade popups con nombre del asentamiento humano ( _Nombre de asentamiento humano_).
+

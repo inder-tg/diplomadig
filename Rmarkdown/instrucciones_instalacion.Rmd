@@ -1,0 +1,119 @@
+---
+title: "Breve guía de instalación: R, RStudio, Git y (algunos) paquetes espaciales "
+author: "Inder Tecuapetla \\hfill (itecuapetla@conabio.gob.mx)"
+date: "Julio 29, 2026"
+
+header-includes:
+  - \renewcommand{\figurename}{Figura}
+  - \usepackage[spanish]{babel}
+
+documentclass: amsart
+# date: "Octubre, 29, 2021"
+geometry: tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm
+output: html_document
+  # bookdown::pdf_document2:
+  #   fig_caption: yes
+  #   toc: false
+fontsize: 12pt
+link-citations: yes
+colorlinks: yes
+graphics: yes
+urlcolor: cyan
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 🧑‍💻 Breve guía de instalación
+
+¡Bienvenidos al mundo del software libre! Aquí todo es abierto, gratuito y pensado para que cualquiera pueda aprender y crear. En este módulo de _**Introducción a la Geocomputación con R**_ vamos a instalar juntos las herramientas básicas que te permitirán explorar datos espaciales y construir tus primeros proyectos.
+
+No te preocupes si es tu primera vez: las instrucciones están diseñadas para ser claras y sencillas, fruto de muchas experiencias enseñando cursos como éste. ¡Vamos a empezar!
+
+## 📦 1. Instalación de R
+R es un lenguaje computacional ideal para realizar análisis estadísticos y visualizaciones.
+
+- Descárgalo en [CRAN](https://cran.r-project.org/).
+- Pasos:
+  1. Haz clíck en *Download R for Windows* ó el sistema operativo (SO) que uses.
+  2. Descarga la versión más reciente.
+  3. Instala con las opciones por defecto (_default_).
+
+<!-- ![R installer screenshot](ruta/a/imagen.png) -->
+
+## 💻 2. Instalación de RStudio
+RStudio es un _entorno de desarrollo integrado_ (IDE por sus siglas en inglés) que permite trabajar con R de modo muy sencillo.
+
+- Descárgalo en [Posit RStudio Desktop](https://posit.co/download/rstudio-desktop/).
+- Pasos:
+  1. Descarga la versión gratuita.
+  2. Instala con las opciones por defecto. 
+  
+**Prueba rápida (OPCIONAL).**
+Abre RStudio, dirígete hacia el panel _Terminal_ y ejecuta:
+```{r, eval=FALSE}
+R.version.string
+
+print("Hello RStudio!")
+```
+
+## 🔗 3. Instalación de Git 
+
+**NOTA:** Usaremos Git a partir de la tercera clase por lo que puedes saltarte esta sección la primera semana de actividades y retomarla en la segunda.
+
+Git es una herramienta para guardar versiones de tu código y colaborar.
+
+- Descárgalo desde la [página principa de descargas de Git](https://git-scm.com/downloads?utm_source=copilot.com)
+- Pasos:
+  1. Descarga la versión para tu sistema operativo (Windows, macOS o Linux).
+  2. Ejecuta el instalador y sigue las instrucciones por defecto.
+  
+**Prueba rápida.**
+Abre una terminal y escribe:
+```{bash, eval=FALSE}
+git --version
+```
+
+## 🛠️ 4. Dependencias de sistema operativo
+
+Algunos paquetes de R necesitan paquetes auxiliares del SO. 
+
+- **Windows:** no necesitas instalar software extra; los paquetes de R se descargan listos desde CRAN.
+- **Linux (Debian/Ubuntu):** abre la terminal y escribe
+
+```{bash, eval=FALSE}
+sudo apt install libgdal-dev libgeos-dev libproj-dev libsqlite3-dev
+```
+
+- **macOS:** si no tienes _Homebrew_ instálalo primero, abre una terminal y escribe:
+```{bash, eval=FALSE}
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Luego instala los paquetes necesarios:
+
+```{bash, eval=FALSE}
+brew install gdal geos proj sqlite
+```
+
+## 🌍 5. Paquetes espaciales en R
+
+En RStudio, dirígete hacia el panel _Terminal_ y ejecuta:
+
+```{r, eval=FALSE}
+install.packages(c("terra", "sf", "mapview", "leaflet", "tmap"),
+                 dependencies = TRUE)
+```
+
+---
+
+## 🎉 ¡Todo listo!
+
+Has terminado de preparar tu entorno de trabajo con R y las herramientas espaciales.
+Ahora sí, estás listo para explorar datos, crear mapas y descubrir el poder de la geocomputación.
+
+Recuerda: cada instalación es un paso hacia tu independencia como científico de datos espaciales.
+¡Disfruta el viaje y deja que tu curiosidad te guíe! 🚀🖥✨
+
+

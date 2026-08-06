@@ -1,0 +1,83 @@
+---
+title: <b><font color="#2ca25f" size=8>Introducción a la Geocomputación con R</font></b>
+subtitle: <font color=Red>XIX Diplomado en Geomática</font>
+  
+author:
+  - name: <b> <font color="#2ca25f" size=5>Inder Tecuapetla</font></b> <font size=4>(itecuapetla@conabio.gob.mx)</font> <br> <font color=Blue>SECIHTI</font>-<font color=Red>CONABIO</font>
+header-style:
+  - usepackage{floatrow}
+  - usepackage{subfig}
+  - usepackage{tabularx}
+header-includes: 
+  - \setbeamerfont{subtitle}{size={\fontsize{25}{25}}}
+  - \usepackage{subfigure}
+  - \usepackage{hyperref}
+  - \usepackage{ragged2e}
+  - \usepackage{amsmath}
+  - \usepackage{mathrsfs} 
+  - \usepackage{algorithmic}
+  - \usepackage{xcolor} #FFD932
+date: <b><font color="#FF7E00" size=3>Instituto de Geografía, UNAM</font> <br> <font color=Blue size=3>Julio 31, 2026</font></b>
+output: 
+  ioslides_presentation:
+    css: slide.css
+    # logo: logo_conacyt.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 🧾 Temario
+
+  - **Unidad 1:** <b> <font color="#2ca25f" size=5>R como herramienta para SIG</font></b> <b> <font size=3>(Julio 31 - Agosto 1, 2026)</font></b>
+  
+    - Instalación de R, RStudio, paquetes varios
+    
+    - Conceptos básicos: tipos de objetos, funciones, paquetes, etc.
+    
+    - Manejo de archivos (```.csv```, ```.shp```, ```.tif```)
+    
+    - Data wrangling (```base``` vs. ```tidyverse```)
+    
+    - Visualización (```ggplot```, ```mapview```, ```leaflet``` )
+
+    - Ejercicios
+
+## 🧾 Temario 
+
+  - **Unidad 2:** <b> <font color="#2ca25f" size=5>Análisis de series de tiempo de imágenes satelitales</font></b> (Agosto 7 & 8, 2026)
+  
+    - Instalación de Git
+    
+    - Integración de una serie de tiempo de datos de NDVI
+    
+    - Análisis de calidad
+    
+    - Clasificación de tendencias
+    
+    - Estimación de parámetros fenológicos
+    
+    - Ejercicios
+    
+## Evaluación 
+
+
+  - 📝 Reporte final detallando _**tus**_ soluciones a algunos de los ejercicios asignados durante las sesiones
+  
+  - ✅ Instrucciones para elaborar el reporte serán dados en la cuarta sesión
+  
+
+## Recomendaciones 
+
+  - 💻🎥 Los estudiantes a distancia deberán tener encendidas sus pantallas
+  
+  - 📵📱 Favor de no usar sus celulares durante las sesiones
+  
+  
+  
+
+
+  
+  
+  

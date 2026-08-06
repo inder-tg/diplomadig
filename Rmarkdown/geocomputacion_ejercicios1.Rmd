@@ -1,0 +1,25 @@
+---
+title: |
+  | Introducción a la Geocomputación con R
+  | Ejercicios: R como herramienta para SIG
+author: "Inder Tecuapetla"
+date: "Julio 31, 2026 \\hfill itecuapetla@conabio.gob.mx"
+output: html_document
+---
+
+# 💻 Ejercicio 1
+
+Calcula las estadísticas mediana y m.a.d. (median absolute deviation) para cada variable físico química del dataset CalCOFI. Resume tus estadísticas en una tabla. Comenta las diferencias entre esta tabla y la que hicimos en clase. **Hint:** ```?mad```
+
+# 📝 Ejercicio 2
+
+Filtra el dataset CalCOFI para retener las observaciones correspondientes al primer trimestre, a profundidad _Deep_ y a distancia _Oceánica_ de la costa. 
+Usa este subconjunto de observaciones para:
+
+  1. Calcular (y graficar) la matriz de correlaciones entre todas las variables físico químicas filtradas. 
+  
+  2. Producir una gráfica de la temperatura promedio anual.
+
+# 🌍 Ejercicio 3
+
+Realiza un mapa dinámico mostrando los puntos de toma de muestra del proyecto CalCOFI correspondientes a profundidad _Very shallow_ y a distancia _Costera_. ¿Notas algo raro en esta visualización?
