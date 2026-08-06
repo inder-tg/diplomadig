@@ -37,13 +37,6 @@
 # --- Agosto 2026
 # =============================================================================
 
-library(RColorBrewer)
-library(gtools)
-library(foreach)
-library(doParallel)
-library(bfast)
-library(geoTS)
-
 neededPackages <- c("here", "readr", "sf", "tidyverse",
                     "leaflet", "dplyr", "ggplot2",
                     "ggcorrplot", "kableExtra",
