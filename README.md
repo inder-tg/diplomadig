@@ -12,8 +12,8 @@ en Geomática organizado por el Instituto de Geografía de la UNAM
 
  - Unidad 1: **R como herramienta para SIG**
  
- - Instrucciones generales y material de apoyo en carpeta Rmarkdown; ver archivo
- 
+ - Instrucciones generales y material de apoyo en carpeta Rmarkdown; compilar archivo
+ geocomputacion_presentacion.Rmd
  
  - Desarrollamos el script unidad1_sesion1.R
 
