@@ -34,7 +34,7 @@ en Geomática organizado por el Instituto de Geografía de la UNAM
   
   - Se clonó este repositorio usando Git
   
-  - Se empleó el script unidad2_sesion3.R
+  - Se emplearon los scripts mohinora_tmap.R y unidad2_sesion3.R
 
 ## Cuarta Sesión (Agosto 7, 2026)
 

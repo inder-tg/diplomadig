@@ -15,14 +15,19 @@
 # --- DATASET: 
 # --- El directorio ANP debe descargarse de la nube del Diplomado
 
+# --- Modificado: Agosto 6, 2026
+# --- Se han actualizado algunas líneas de código empleando funciones actuales
+
 # --- Preámbulo END
 
 library(sf)
 library(tmap)
+library(here)
 
 # ---
 
-DIR <- paste0(getwd(), "/data")
+# DIR <- paste0(getwd(), "/data")
+DIR <- here("data")
 
 listDIRS <- list.dirs(path=DIR)
 
