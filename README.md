@@ -32,7 +32,13 @@ en Geomática organizado por el Instituto de Geografía de la UNAM
 
   - Resultados de la Encuesta **Percepción de Integración de R e IA**
   
-  - Se clonó este repositorio usando Git
+  - Se clonó este repositorio usando Git:
+  
+    - **De requerirse** Configurar usuario Git (sólo la primera vez)
+    
+    - En **Terminal** teclea: git config --global user.name "Tu Nombre"
+    
+    - En **Terminal** teclea: git config --global user.email "tuemail@example.com"
   
   - Se emplearon los scripts auxPKG.R, mohinora_tmap.R, mohinora_QA.R y mohinora_imputation.R
 
