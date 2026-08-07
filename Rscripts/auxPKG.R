@@ -58,11 +58,11 @@ if( length(packagesToInstall) > 0 ){
 library(tinytex)
 tinytex::install_tinytex()
 
-# --- Requerido para algunos plots de sephora
-(!require("BiocManager", quietly = TRUE))
-install.packages("BiocManager", source = TRUE)
-
-library(BiocManager)
-BiocManager::install("ComplexHeatmap")
+# # --- Requerido para algunos plots de sephora
+# (!require("BiocManager", quietly = TRUE))
+# install.packages("BiocManager", source = TRUE)
+# 
+# library(BiocManager)
+# BiocManager::install("ComplexHeatmap")
 
 

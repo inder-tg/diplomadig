@@ -16,13 +16,15 @@
 # --- El directorio ANP debe descargarse de la nube del Diplomado
 
 # --- Modificado: Agosto 6, 2026
-# --- Se han actualizado algunas líneas de código empleando funciones actuales
+# --- Se han actualizado algunas líneas de código empleando funciones actuales 
+# --- para alinearnos a las expectativas del Diplomado en Geomática Edición XIX
 
 # --- Preámbulo END
 
 library(sf)
 library(tmap)
 library(here)
+library(tidyverse)
 
 # ---
 
@@ -31,15 +33,17 @@ DIR <- here("data")
 
 listDIRS <- list.dirs(path=DIR)
 
-anpFILES <- list.files(path = listDIRS[2],
+lst_dirs <- setNames( as.list(listDIRS), basename(listDIRS) )
+
+anpFILES <- list.files(path = lst_dirs$ANP,# listDIRS[2],
                    full.names = TRUE,
                    pattern = ".shp$")
 
-usvFILES <- list.files(path = listDIRS[6],
+usvFILES <- list.files(path = lst_dirs$mohinora_usv7,
                   full.names = TRUE,
                   pattern = ".shp$")
 
-ndviFILES <- list.files(path = listDIRS[4],
+ndviFILES <- list.files(path = lst_dirs$`250m_16_days_NDVI`,
                         full.names = TRUE,
                         pattern = ".tif$")
 
@@ -90,21 +94,20 @@ shp_mohinora_rect <- tm_shape(mohinora_USV) +
   tm_graticules(n.x=4,
                 labels.size=1.5) +
   tm_compass(type = "rose", size=4,
-             position = c("right", "top")) +
-  tm_scale_bar(text.size = 0.75,
+             position = c("left", "top")) +
+  tm_scalebar(text.size = 0.75,
     position = c("right", "bottom")) +
-  tm_fill(col= "COLOR") +
-  tm_add_legend("symbol", 
+  tm_fill(fill = "COLOR") +
+  tm_add_legend(type = "polygons", 
+                shape = 16, # círculo relleno
                 labels=usv_NAMES, 
-                col=usv_COLORS,
-                border.col = "grey40",
-                size=4,
-                shape=15,
+                fill=usv_COLORS,
+                # size=4,
                 is.portrait = FALSE) +
   tm_layout(legend.outside = TRUE,
             legend.outside.position = "bottom",
             legend.outside.size = 0.115,
-            legend.text.size = 4,
+            # legend.text.size = 4,
             legend.text.fontface = 2)
 
 shp_mohinora_rect
@@ -131,21 +134,22 @@ shp_mohinora_fill <- tm_shape(mohinora_USV, bbox=bbox_new) +
   tm_graticules(n.x=4,
                 labels.size=1.5) +
   tm_compass(type = "rose", size=4,
-             position = c("right", "top")) +
-  tm_scale_bar(text.size = 0.75,
+             position = c("left", "top")) +
+  tm_scalebar(text.size = 0.75,
     position = c("right", "bottom")) +
-  tm_fill(col= "COLOR") +
-  tm_add_legend("symbol", 
+  tm_fill(fill= "COLOR") +
+  tm_add_legend("polygons", 
                 labels=usv_NAMES, 
-                col=usv_COLORS,
-                border.col = "grey40",
-                size=4,
-                shape=15,
+                fill=usv_COLORS,
+                shape = 15, # cuadro relleno
+                # border.col = "grey40",
+                # size=4,
+                # shape=15,
                 is.portrait = FALSE) +
   tm_layout(legend.outside = TRUE,
             legend.outside.position = "bottom",
             legend.outside.size = 0.115,
-            legend.text.size = 4,
+            # legend.text.size = 4,
             legend.text.fontface = 2)#,
 
 shp_mohinora_fill  
@@ -160,13 +164,14 @@ shp_mohinora_lines <- tm_shape(mohinora_USV_lines,
                       bbox = bbox_new) +
   tm_lines(col = "COLOR", lwd=3) +
   tm_compass(type = "8star", position = c("right", "bottom")) +
-  tm_scale_bar(text.size = 0.65, position = c("right", "bottom")) +
+  tm_scalebar(text.size = 0.65, position = c("right", "bottom")) +
   tm_add_legend("line",
                 labels=usv_NAMES,
                 col=usv_COLORS,
-                border.col = "grey40",
+                shape=1,
+                # border.col = "grey40",
                 lwd=3) +
-  tm_layout(frame = FALSE, bg.color = NA,
+  tm_layout(frame = FALSE, bg = FALSE,
             legend.outside = FALSE,
             legend.stack = "horizontal",
             legend.position = c("left", "bottom"))

@@ -1,16 +1,19 @@
 
 # --- Elaborado Mar 9, 2023
 # --- Código para calcular % de dato faltante -a nivel pixel-
-# --- y maxGapLength en rasterStack
+# --- y maxGapLength
 # --- DATASET: NDVI MOD13Q1 en Cerro Mohinora, Chihuahua, 2000-2023
+
 # --- Actualizado: Feb 24, 2024, Abril 5. 2025
 # --- DATASET: NDVI MOD13Q1 v061 en Cerro Mohinora, Chihuahua, 2000-2024
 
-# --- NOTA: Crear subdirectorios necesarios (/data/mohinora)
+# --- Actualizado: Ago 6, 2026
+# --- Se han actualizado algunas líneas de código empleando funciones actuales 
+# --- para alinearnos a las expectativas del Diplomado en Geomática Edición XIX
+# --- NOTA: Crear subdirectorios necesarios (ej. /data/mohinora)
 
 library(terra)
 library(sf)
-
 library(geoTS)
 library(foreach)
 library(doParallel)
@@ -19,15 +22,18 @@ source("Rscripts/auxFUN.R")
 
 # ---
 
-DIRS <-  list.dirs( path = paste0( getwd(), "/data"  ) ) #"C:/Users/inder/OneDrive/Desktop/proyectoCONABIO2025/mohinora"
+# DIRS <-  list.dirs( path = paste0( getwd(), "/data"  ) )
+DIRS <- list.dirs( here("data") )
 
-NDVIfiles <- list.files(path = DIRS[4], # checar numero
+lst_DIRS <- setNames( as.list(DIRS), basename(DIRS) )
+
+NDVIfiles <- list.files(path = lst_DIRS$`250m_16_days_NDVI`,
                         pattern = ".tif", 
                         full.names = TRUE)
 
 mohinora_DATA <- rast(NDVIfiles)
 
-RELIABILITYfiles <- list.files(path = DIRS[5], # checar numero
+RELIABILITYfiles <- list.files(path = lst_DIRS$`250m_16_days_pixel_reliability`,
                                pattern = ".tif", 
                                full.names = TRUE)
 
@@ -35,7 +41,7 @@ mohinora_DATA_reliability <- rast(RELIABILITYfiles)
 
 # mohinoraRDataDIR <- paste0( mestiperDIR, "/RData" )
 
-SHPfiles <- list.files(path = DIRS[7],
+SHPfiles <- list.files(path = lst_DIRS$outputs,
                        pattern = ".shp$",
                        full.names = TRUE)
 
@@ -63,7 +69,8 @@ lines(mohinora_shp, col = "cyan")
 
 # ---
 
-whereToSave <- paste0(DIRS[3], "/250m_16_days_NDVI_QA") #paste0( getwd(), "/data/mohinora/250m_16_days_NDVI_QA" ) 
+# whereToSave <- paste0(DIRS[3], "/250m_16_days_NDVI_QA") 
+whereToSave <- here( lst_DIRS$mohinora, "/250m_16_days_NDVI_QA" )
 dir.create(whereToSave, recursive = TRUE)
 
 TEMP <- subset(mohinora_DATA, 1)
@@ -73,7 +80,7 @@ TEMP[ AUX >= 2 ] <- NA
 nameFILE <- basename( NDVIfiles[1]  )
 nameFILE <- paste0(strsplit( nameFILE, ".tif" )[[1]][1], "_QA.tif")
 writeRaster(TEMP, 
-            filename = paste0( whereToSave, "/", nameFILE ),
+            filename = here(whereToSave, nameFILE), # paste0( whereToSave, "/", nameFILE ),
             datatype = datatype(mohinora_DATA)[1],
             overwrite = TRUE)
 
@@ -83,19 +90,18 @@ for(i in 2:nlyr(mohinora_DATA)){
   TEMP <- subset(mohinora_DATA, i)
   AUX <- subset(mohinora_DATA_reliability, i)
   TEMP[ AUX >= 2 ] <- NA 
-  # add(mohinora_DATA_mask) <- TEMP
   
   nameFILE <- basename( NDVIfiles[i]  )
   nameFILE <- paste0(strsplit( nameFILE, ".tif" )[[1]][1], "_QA.tif")
   writeRaster(TEMP, 
-              filename = paste0( whereToSave, "/", nameFILE ),
+              filename = here(whereToSave, nameFILE), # paste0( whereToSave, "/", nameFILE ),
               datatype = datatype(mohinora_DATA)[1],
               overwrite = TRUE)
 }
 
 # --- 
 
-ndviQAFILES <- list.files( path = paste0( getwd(), "/data/mohinora/250m_16_days_NDVI_QA" ),
+ndviQAFILES <- list.files( path = here( lst_DIRS$mohinora, "250m_16_days_NDVI_QA" ), # paste0( getwd(), "/data/mohinora/250m_16_days_NDVI_QA" ),
                            pattern = ".tif$",
                            full.names = TRUE )
 
@@ -106,13 +112,18 @@ mohinora_DATA_QA_shp <- crop(mohinora_DATA_QA, mohinora_shp,
 
 mohinora_DATA_QA_rTp <- spRast_valuesCoords(mohinora_DATA_QA_shp)
 
-# --- EJEMPL sobre un pixel
+# --- EJEMPLO sobre un pixel
 
 pixel <- mohinora_DATA_QA_rTp$values[1700,]
 
 (pixel_percentMiss <- sum(is.na(pixel)) / length(pixel)) * 100 # length de cualquier pixel es 483
 
 (pixel_maxgap <- maxLagMissVal(x=pixel)$maxLag)
+
+pixel_ts <- ts( pixel, start = c(2000,1), end = c(2024,23), frequency = 23 )
+
+par(mfrow=c(1,1))
+plot(pixel_ts, ylab="NDVI (integer format)")
 
 # --- COMPUTO en PARALELO
 
@@ -125,11 +136,12 @@ maxgap_df[,1:2] <- mohinora_DATA_QA_rTp$coords[,1:2]
 # --- progress report file (to check out on the process)
 # --- antes de ejecutar, crear /RData/progressReports/mohinora (sólo en caso de que los directorios no existan)
 
-dir.create( paste0(getwd(), "/RData/progressReports/mohinora"), recursive = TRUE )
+dir.create( here( "RData", "progressReports" ),
+            recursive = TRUE )
 
 numCores <- detectCores()
 
-progressReportFile <- paste0(getwd(), "/RData/progressReports/mohinora/progress_QA.txt" )
+progressReportFile <- here( "RData", "progressReports", "mohinora_QA.txt" )
 file.create(path=progressReportFile, showWarnings=FALSE)
 
 write("===QA analysis began at===",
@@ -145,7 +157,7 @@ output <- foreach(i=1:nrow(mohinora_DATA_QA_rTp$values), .combine="rbind",
                     
                     pixel <- mohinora_DATA_QA_rTp$values[i,]
                     
-                    pixel_percentMiss <- sum(is.na(pixel)) / length(pixel) # length de cualquier pixel es 483
+                    pixel_percentMiss <- sum(is.na(pixel)) / length(pixel) * 100 # length de cualquier pixel es 483
                     
                     pixel_maxgap <- maxLagMissVal(x=pixel)$maxLag
                     
@@ -172,7 +184,8 @@ maxgap_df[,3] <- output[,2]
 
 # --- antes de ejecutar, crear /RData/mohinora_QA
 
-dir.create( paste0(getwd(),"/RData/mohinora_QA"), recursive = TRUE )
+dir.create( here( "RData", "mohinora_QA" ), # paste0(getwd(),"/RData/mohinora_QA"), 
+            recursive = TRUE )
 
 save(df_perc_miss, file=paste0(getwd(),"/RData/mohinora_QA/percent_missingValue.RData"))
 save(maxgap_df, file=paste0(getwd(),"/RData/mohinora_QA/maxgap.RData"))
@@ -181,8 +194,10 @@ save(maxgap_df, file=paste0(getwd(),"/RData/mohinora_QA/maxgap.RData"))
 
 PROJECTION <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=m +no_defs" #projection(mohinora_DATA) # crs(mohinora_mask) # raster::projection(TEMP) # crs(STACK_sp_ndvi_subset)
 
-map_percentMissing <- matrixToRaster(matrix=df_perc_miss, projection=PROJECTION)
-map_maxgap <- matrixToRaster(matrix=maxgap_df, projection=PROJECTION)
+map_percentMissing <- matrixToRaster(matrix=df_perc_miss, 
+                                     projection=PROJECTION)
+map_maxgap <- matrixToRaster(matrix=maxgap_df, 
+                             projection=PROJECTION)
 
 map_percentMissing
 map_maxgap
@@ -202,18 +217,21 @@ writeRaster(map_maxgap,
 
 # ---
 
-QAfiles <- list.files(path=paste0(getwd(), "/data/outputs/mohinora_QA"),
+QAfiles <- list.files(path = here( "data", "outputs", "mohinora_QA" ),
                       pattern=".tif",
                       full.names=TRUE)
 
 maxGap <- rast(QAfiles[1])
 percent <- rast(QAfiles[2])
 
+par(mfrow=c(1,2))
+plot(maxGap, main="max-gap length")
+plot(percent, main="% missing values")
+
 maxGap <- crop(maxGap, mohinora_shp, mask=TRUE)
 percent <- crop(percent, mohinora_shp, mask=TRUE)
 
-par(mfrow=c(1,2))
 plot(maxGap, main="max-gap length")
-plot(percent * 100, main="% missing values")
-
+plot(percent, main="% missing values")
+par(mfrow=c(1,1))
 # ---

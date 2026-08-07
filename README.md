@@ -30,15 +30,15 @@ en Geomática organizado por el Instituto de Geografía de la UNAM
   - Revisión de Ejercicios de las primeras 2 sesiones; uso de Rmarkdown para generar 
   reportes técnicos que utilizan código de R
 
-  - Resultados de la Encuesta **Percepción del uso de IA con RStudio**
+  - Resultados de la Encuesta **Percepción de Integración de R e IA**
   
   - Se clonó este repositorio usando Git
   
-  - Se emplearon los scripts mohinora_tmap.R y unidad2_sesion3.R
+  - Se emplearon los scripts auxPKG.R, mohinora_tmap.R, mohinora_QA.R y mohinora_imputation.R
 
 ## Cuarta Sesión (Agosto 7, 2026)
 
-  - 
+  - Se emplearon los scripts mohinora_interpolation.R y mohinora_cps.R
 
 </details>
 

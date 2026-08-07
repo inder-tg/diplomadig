@@ -8,6 +8,11 @@
 
 # --- DATASET: NDVI MOD13Q1 v061 2000-2024 en Cerro Mohinora, Chihuahua
 
+# --- Actualizado: Ago 6, 2026
+# --- Se han actualizado algunas líneas de código empleando funciones actuales 
+# --- para alinearnos a las expectativas del Diplomado en Geomática Edición XIX
+# --- NOTA: Crear subdirectorios necesarios (ej. /data/mohinora)
+
 # --- Preámbulo
 library(terra)
 library(mapview)
@@ -21,21 +26,30 @@ source("Rscripts/auxFUN.R")
 
 # --- 
 
-DIR <- paste0( getwd(), "/data/mohinora" )
+# DIR <- paste0( getwd(), "/data/mohinora" )
+DIR <- list.dirs( here("data", "mohinora") )
+lst_DIR <- setNames( as.list(DIR), basename(DIR) )
 
 # --- Carga de datos
 
-NDVIfiles <- list.files( path = paste0( DIR, "/250m_16_days_NDVI_QA" ), 
+NDVIfiles <- list.files( path = lst_DIR$`250m_16_days_NDVI_QA`, # paste0( DIR, "/250m_16_days_NDVI_QA" ), 
                          pattern = ".tif",
                          full.names = TRUE )
 
-mohinora_DATA <- rast(NDVIfiles)  # stack(NDVIfiles)
+mohinora_DATA <- rast(NDVIfiles)
 
-SHPfiles <- list.files(path = paste0( getwd(), "/data/outputs" ),
+SHPfiles <- list.files(path = here("data", "outputs"), # paste0( getwd(), "/data/outputs" ),
                        pattern = ".shp$",
                        full.names = TRUE)
 
 mohinora_shp <- read_sf(SHPfiles[1])
+
+# OJO: lst_dirs fue definido en mohinora_tmap.R
+usvFILES <- list.files(path = lst_dirs$mohinora_usv7,
+                       full.names = TRUE,
+                       pattern = ".shp$")
+
+mohinora_USV <- read_sf(usvFILES)
 
 # ----------------------------------
 # --- Datos faltantes: Exploración #
@@ -45,11 +59,24 @@ mohinora_shp <- read_sf(SHPfiles[1])
 
 mohinora_DATA_rTp <- spRast_valuesCoords(mohinora_DATA) # rasterToPoints(mohinora_DATA) #spRast_valuesCoords(mohinora_DATA)
 
-# mohinora_DATA_rTp_coords <- mohinora_DATA_rTp[,1:2]
-# mohinora_DATA_rTp_values <- mohinora_DATA_rTp[,3:551]
+# Graficar un subset de tu objeto base
+plot(subset(mohinora_DATA, 10))
 
-plot( subset(mohinora_DATA, 10) )
-lines( mohinora_shp, lwd=4)
+# Añadir los polígonos con colores
+lines(mohinora_USV, col = usv_COLORS, lwd = 6)
+# plot(mohinora_USV, col = usv_COLORS, lwd = 6, add=TRUE)
+
+# Añadir la leyenda
+legend("topleft", # posición en el gráfico
+       legend = usv_NAMES,         # nombres de las categorías
+       col = usv_COLORS,           # colores de borde
+       lwd = 6,                    # grosor de línea en la leyenda
+       pt.cex = 1,                  # tamaño del texto
+       bty = "n",                  # sin caja alrededor
+       inset = c(0.015, 0.05))
+
+# ACÁ ME QUEDÉ ANOCHE
+
 
 # -----------------------------------------------------------------------------
 # --- Para analizar la serie de tiempo de cualquier píxel en la imagen sigue estos
@@ -81,9 +108,9 @@ plot(pixel_ts, xlab="Años", ylab="NDVI", col="darkgreen",
 # --- CONOCE tu DATASET!!
 # --- Extremo cuidado al usar ts() para definir un objeto
 
-pixel_ts[550:552]
-as.numeric(pixel[547:549])
-as.numeric(pixel[1:3])
+pixel_ts[573:575] # últimas 3 entradas del vector pixel_ts 
+as.numeric(pixel[570:572]) # últimas 3 entradas del vector pixel
+as.numeric(pixel[1:3]) # primeras 3 entradas del vector pixel
 # ------------------------------------------------------------------------------
 
 pixel_aug <- c(NA,NA,NA, as.numeric(pixel))
@@ -94,8 +121,8 @@ pixel_aug_ts <- ts(pixel_aug, start = c(2000,1), end = c(2024,23),
 plot(pixel_aug_ts, xlab="Años", ylab="NDVI", col="darkgreen", 
      main="pixel aumentado como objeto 'ts'")
 
-pixel_aug_ts[550:552]
-as.numeric(pixel[547:549])
+pixel_aug_ts[573:575]
+as.numeric(pixel[570:572])
 
 # -----------------------------------------------------------------------------
 # --- Uso de la curva de climatología para imputar las primeras 3 fechas del pixel
@@ -140,7 +167,7 @@ df_layer3[,1:2] <- mohinora_DATA_rTp$coords
 
 # progress report file (to check out on the process)
 
-DIR_progress <- paste0( getwd(), "/RData/progressReports/mohinora" )
+DIR_progress <- paste0( getwd(), "/RData/progressReports" )
 
 if( !dir.exists(DIR_progress) ){
   dir.create(DIR_RData, recursive = TRUE)
@@ -165,9 +192,10 @@ output <- foreach(i=1:nrow(mohinora_DATA_rTp$values), .combine="rbind") %dopar% 
   
   pixel_aug <- c(NA,NA,NA, as.numeric(pixel))
   
-  clima <- climatology(x=pixel_aug, lenPeriod=23)
+  clima <- climatology( x=pixel_aug, lenPeriod=23 )
   
-  s <- ceiling(apply(clima$matrix[-1,1:3], MARGIN=2, FUN=median, na.rm=TRUE))
+  s <- ceiling( apply( clima$matrix[-1,1:3], MARGIN=2, 
+                     FUN = median, na.rm = TRUE ) )
   
   if(i %% 100 ==0){
     texto <- paste0("Working on ROW: ", i)
@@ -217,7 +245,7 @@ layer1 <- matrixToRaster(matrix=df_layer1, projection=PROJECTION)
 layer2 <- matrixToRaster(matrix=df_layer2, projection=PROJECTION)
 layer3 <- matrixToRaster(matrix=df_layer3, projection=PROJECTION)
 
-# --- Asegurarse de crear /outputs/mohinora_imputation
+# --- Asegurarse de crear /data/outputs/mohinora_imputation
 # --- Guardando las imputaciones en archivos GeoTiff
 
 DIR_outputs <- paste0( getwd(), "/data/outputs/mohinora_imputation" )
