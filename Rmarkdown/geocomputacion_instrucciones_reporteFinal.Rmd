@@ -35,7 +35,9 @@ knitr::opts_chunk$set(echo = TRUE)
   
   - En tu reporte en _.pdf_, asegúrate de incluir cada línea de código que consideres esencial para justificar la obtención de tu solución.
   
-  - **Fecha de entrega:** Agosto 16, 2026.
+  - **Fecha de entrega:** Agosto 23, 2026.
+  
+  - **Entrega a través de MOODLE**
   
   - 🏆 ¡Éxito!
   
