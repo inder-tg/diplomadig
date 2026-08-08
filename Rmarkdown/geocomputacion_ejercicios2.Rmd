@@ -13,7 +13,7 @@ output: html_document
 
   - Filtra los cines que se incorporaron después de 2015.
 
-  - Grafica con ```ggplot``` el número de cines incorporados por año.
+  - Grafica con ```ggplot``` el número de cines incorporados por año. **Hint:** _mutate(anyo = substr(`Fecha de incorporación al DENUE`, 1, 4))_
 
 Reflexiona: ¿hay un patrón de crecimiento o estancamiento?
 

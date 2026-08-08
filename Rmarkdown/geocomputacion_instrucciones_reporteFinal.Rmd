@@ -1,0 +1,47 @@
+---
+title: "Instrucciones para la elaboración del reporte final"
+author: "Inder Tecuapetla \\hfill (itecuapetla@conabio.gob.mx)"
+date: "Agosto 8, 2026"
+
+header-includes:
+  - \renewcommand{\figurename}{Figura}
+  - \usepackage[spanish]{babel}
+
+documentclass: amsart
+# date: "Octubre, 29, 2021"
+geometry: tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm
+output: html_document
+  # bookdown::pdf_document2:
+  #   fig_caption: yes
+  #   toc: false
+fontsize: 12pt
+link-citations: yes
+colorlinks: yes
+graphics: yes
+urlcolor: cyan
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 🧑‍💻 Instrucciones
+
+  - Selecciona 4 de los 6 ejercicios considerados en clase. Estos ejercicios los puedes encontrar en los archivos _geocomputacion_ejercicios1.Rmd_ y _geocomputacion_ejercicios2.Rmd_, respectivamente.
+  
+  - Encuentra soluciones a los ejercicios seleccionados. 
+  
+  - **(Deseable)** Reporta tus soluciones en un archivo _.Rmd_ produciendo como salida un archivo _.pdf_ . En caso de no conseguir generar el archivo _.pdf_, puedes reportar tus soluciones en un archivo _.R_; en este caso asegúrate de documentar cada paso de tu código.
+  
+  - En tu reporte en _.pdf_, asegúrate de incluir cada línea de código que consideres esencial para justificar la obtención de tu solución.
+  
+  - **Fecha de entrega:** Agosto 16, 2026.
+  
+  - 🏆 ¡Éxito!
+  
+  
+  
+  
+
+
+
